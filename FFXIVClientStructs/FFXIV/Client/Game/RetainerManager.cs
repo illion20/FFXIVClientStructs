@@ -3,10 +3,13 @@
 [StructLayout(LayoutKind.Explicit, Size = 0x2E8)]
 public unsafe partial struct RetainerManager
 {
-    [StaticAddress("48 8D 0D ?? ?? ?? ?? 49 89 46", 3)]
+    [StaticAddress("48 8D 0D ?? ?? ?? ?? 48 8B 18", 3)]
     public static partial RetainerManager* Instance();
 
+    [Obsolete("Use Retainers")]
     [FieldOffset(0x000)] public RetainerList Retainer;
+    [FixedSizeArray<RetainerList.Retainer>(10)]
+    [FieldOffset(0x000)] public fixed byte Retainers[0x48 * 10];
     [FieldOffset(0x2D0)] public fixed byte DisplayOrder[10];
     [FieldOffset(0x2DA)] public byte Ready;
     [Obsolete("Use GetRetainerCount() instead.", true)]
@@ -26,7 +29,7 @@ public unsafe partial struct RetainerManager
     /// <summary>
     /// Counts the number of Retainers that have an assigned ID.
     /// </summary>
-    [MemberFunction("E8 ?? ?? ?? ?? BA ?? ?? ?? ?? 48 8D 4C 24 ?? 8B F8 E8 ?? ?? ?? ?? 48 8B 4E 10 89 7C 24 68")]
+    [MemberFunction("E8 ?? ?? ?? ?? 48 8B CB 8B E8 E8 ?? ?? ?? FF 8B")]
     public partial byte GetRetainerCount();
     
     /// <summary>

@@ -13,10 +13,16 @@ public unsafe partial struct RaptureAtkUnitManager
 {
     [FieldOffset(0x0)] public AtkUnitManager AtkUnitManager;
 
+    [FieldOffset(0x9C80)] public RaptureAtkModuleFlags Flags;
+
+    [FieldOffset(0x9CF8)] public UIModule.UiFlags UiFlags;
+
     [MemberFunction("E8 ?? ?? ?? ?? 48 8B F8 41 B0 01")]
     [GenerateCStrOverloads]
     public partial AtkUnitBase* GetAddonByName(byte* name, int index = 1);
 
     [MemberFunction("E8 ?? ?? ?? ?? 8B 6B 20")]
     public partial AtkUnitBase* GetAddonById(ushort id);
+    
+    [VirtualFunction(11)] public partial void UpdateAddonByID(ushort addonId, NumberArrayData** numberArrayData, StringArrayData** stringArrayData, bool forced);
 }

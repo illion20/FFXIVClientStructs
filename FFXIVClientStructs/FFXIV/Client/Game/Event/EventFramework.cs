@@ -35,9 +35,19 @@ public unsafe partial struct EventFramework
 	    if (director == null || director->Info.EventId.Type != EventHandlerType.InstanceContentDirector)
 		    return null;
 	    var instanceDirector = (InstanceContentDirector*)director;
-	    if (instanceDirector->InstanceContentType != 9)
+	    if (instanceDirector->InstanceContentType != InstanceContentType.DeepDungeon)
 		    return null;
 	    return (InstanceContentDeepDungeon*)director;
+    }
+
+    public InstanceContentOceanFishing* GetInstanceContentOceanFishing() {
+	    var director = (EventHandler*)GetContentDirector();
+	    if (director == null || director->Info.EventId.Type != EventHandlerType.InstanceContentDirector)
+		    return null;
+	    var instanceDirector = (InstanceContentDirector*)director;
+	    if (instanceDirector->InstanceContentType != InstanceContentType.OceanFishing)
+		    return null;
+	    return (InstanceContentOceanFishing*)director;
     }
 
     [MemberFunction("E8 ?? ?? ?? ?? 32 C9 0F B6 D9")]

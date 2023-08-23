@@ -5,11 +5,11 @@ namespace FFXIVClientStructs.FFXIV.Client.UI.Misc;
 
 // Client::UI::Misc::FieldMarkerModule
 //   Client::UI::Misc::UserFileManager::UserFileEvent
-// ctor "E8 ?? ?? ?? ?? 33 D2 48 89 B7 ?? ?? ?? ?? 8D 4E 28"
+// ctor "E8 ?? ?? ?? ?? 33 C0 33 D2 41 B8 ?? ?? ?? ?? 48 89 87"
 [StructLayout(LayoutKind.Explicit, Size = 0xC78)]
 public unsafe partial struct FieldMarkerModule
 {
-    public static FieldMarkerModule* Instance() => Framework.Instance()->UIModule->GetFieldMarkerModule();
+    public static FieldMarkerModule* Instance() => Framework.Instance()->GetUiModule()->GetFieldMarkerModule();
 
     [FieldOffset(0)] public UserFileEvent UserFileEvent;
     [FixedSizeArray<FieldMarkerPreset>(30)]

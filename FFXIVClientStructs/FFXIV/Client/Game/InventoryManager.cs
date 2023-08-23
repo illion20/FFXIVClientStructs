@@ -15,8 +15,11 @@ public unsafe partial struct InventoryManager
     [MemberFunction("E8 ?? ?? ?? ?? 03 F8 BB")]
     public partial int GetItemCountInContainer(uint itemId, InventoryType inventoryType, bool isHq = false, short minCollectability = 0);
 
-    [MemberFunction("E8 ?? ?? ?? ?? 33 DB 89 1E")]
+    [MemberFunction("E8 ?? ?? ?? ?? 33 DB 89 5E 08")]
     public partial int MoveItemSlot(InventoryType srcContainer, uint srcSlot, InventoryType dstContainer, uint dstSlot, byte unk = 0);
+
+    [MemberFunction("E8 ?? ?? ?? ?? 85 C0 7F 6D")]
+    private partial uint GetEquippedItemIdForSlot(int slotId);
 
     /// <summary>
     /// Get the number of gearsets the player is permitted to have/use.
@@ -50,7 +53,7 @@ public unsafe partial struct InventoryContainer
     [FieldOffset(0x0C)] public uint Size;
     [FieldOffset(0x10)] public byte Loaded;
 
-    [MemberFunction("E8 ?? ?? ?? ?? 8B 5B 0C")]
+    [MemberFunction("E8 ?? ?? ?? ?? 8B 57 F0")]
     public partial InventoryItem* GetInventorySlot(int index);
 }
 

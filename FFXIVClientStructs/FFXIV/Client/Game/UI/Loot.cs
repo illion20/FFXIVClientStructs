@@ -30,16 +30,18 @@ public unsafe struct LootItem
 
 public enum RollState 
 {
-    Unrolled = 0,
-    Available = 1,
+    UpToNeed = 0, //Can roll up to Need
+    UpToGreed = 1,//Can roll up to Gree
+    UpToPass = 2, //Can only pass
     Rolled = 17,
-    Unavailable = 21,
+    Unavailable = 21, //Lootmaster undecided?
     Unknown = 28, // Default value
 }
 
 public enum RollResult
 {
     UnAwarded = 0,
+    Needed = 1,
     Greeded = 2,
     Passed = 5,
     Awarded = 6,

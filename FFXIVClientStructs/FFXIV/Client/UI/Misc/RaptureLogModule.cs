@@ -8,7 +8,7 @@ namespace FFXIVClientStructs.FFXIV.Client.UI.Misc;
 // Client::UI::Misc::RaptureLogModule
 //   Component::Log::LogModule
 // ctor "E8 ?? ?? ?? ?? 4C 8D A7 ?? ?? ?? ?? 49 8B CC E8 ?? ?? ?? ?? 48 8D 05 ?? ?? ?? ??"
-[StructLayout(LayoutKind.Explicit, Size = 0x3480)]
+[StructLayout(LayoutKind.Explicit, Size = 0x3488)]
 public unsafe partial struct RaptureLogModule
 {
     public static RaptureLogModule* Instance() => Framework.Instance()->GetUiModule()->GetRaptureLogModule();
@@ -18,7 +18,10 @@ public unsafe partial struct RaptureLogModule
     [FieldOffset(0xE8)] public ExcelModuleInterface* ExcelModuleInterface;
     [FieldOffset(0xF0)] public RaptureTextModule* RaptureTextModule;
 
-    [FieldOffset(0x528)] public fixed byte ChatTabs[5 * 0x928]; // array of 5 RaptureLogModuleTab
+    [FixedSizeArray<RaptureLogModuleTab>(5)]
+    [FieldOffset(0x528)] public fixed byte ChatTabs[5 * 0x928];
+
+    [FieldOffset(0x33E8)] public fixed byte ChatTabsPendingReload[4]; // set to 1 to reload the tab, see "48 8D 9E ?? ?? ?? ?? 48 8D BE ?? ?? ?? ?? 90"
 
     [FieldOffset(0x3470)] public LogMessageSource* MsgSourceArray;
     [FieldOffset(0x3478)] public int MsgSourceArrayLength;
