@@ -4,7 +4,7 @@ using FFXIVClientStructs.FFXIV.Component.GUI;
 namespace FFXIVClientStructs.FFXIV.Client.UI.Agent;
 
 [Agent(AgentId.FieldMarker)]
-[StructLayout(LayoutKind.Explicit, Size = 0xCD8)]
+[StructLayout(LayoutKind.Explicit, Size = 0xCE0)]
 public unsafe partial struct AgentFieldMarker
 {
     [FieldOffset(0x00)] public AgentInterface AgentInterface;
@@ -14,7 +14,7 @@ public unsafe partial struct AgentFieldMarker
     [FixedSizeArray<Utf8String>(30)]
     [FieldOffset(0x40)] public fixed byte PresetLabels[0x68 * 30];
     
-    [FieldOffset(0x888)] public Utf8String TooltipString;
+    [FieldOffset(0xC70)] public Utf8String TooltipString;
     
     public bool IsWaymarkActive(WaymarkIndex waymark) => (ActiveMarkerFlags & (1 << (int) waymark)) != 0;
     public bool IsWaymarkActive(int index) => (ActiveMarkerFlags & (1 << index)) != 0;

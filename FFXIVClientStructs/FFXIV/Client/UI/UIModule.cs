@@ -1,5 +1,5 @@
-using System.Text;
 using FFXIVClientStructs.FFXIV.Client.Game;
+using FFXIVClientStructs.FFXIV.Client.System.Framework;
 using FFXIVClientStructs.FFXIV.Client.UI.Agent;
 using FFXIVClientStructs.FFXIV.Client.UI.Info;
 using FFXIVClientStructs.FFXIV.Client.UI.Misc;
@@ -10,10 +10,12 @@ namespace FFXIVClientStructs.FFXIV.Client.UI;
 
 // Client::UI::UIModule
 //   Client::UI::UIModuleInterface
-[StructLayout(LayoutKind.Explicit, Size = 0xEB400)]
+[StructLayout(LayoutKind.Explicit, Size = 0xEC1E0)]
 [VTableAddress("48 8D 05 ?? ?? ?? ?? 4C 89 61 ?? 4C 8B F2", 3)]
 public unsafe partial struct UIModule
 {
+    public static UIModule* Instance() => Framework.Instance()->GetUiModule();
+
     [FieldOffset(0x0)] public void* vtbl;
     [FieldOffset(0x0)] public void** vfunc;
     [FieldOffset(0x8)] public Unk1 UnkObj1;
@@ -67,7 +69,7 @@ public unsafe partial struct UIModule
     public partial RaptureGearsetModule* GetRaptureGearsetModule();
 
     [VirtualFunction(15)]
-    public partial void* GetAcquaintanceModule();
+    public partial AcquaintanceModule* GetAcquaintanceModule();
 
     [VirtualFunction(16)]
     public partial ItemOrderModule* GetItemOrderModule();
@@ -132,11 +134,17 @@ public unsafe partial struct UIModule
     [VirtualFunction(76)]
     public partial void ExitGPose();
 
+    [VirtualFunction(77)]
+    public partial bool IsInGPose();
+
     [VirtualFunction(78)]
     public partial void EnterIdleCam(byte a1 = 0, ulong focusObject = 0xE0000000);
 
     [VirtualFunction(79)]
     public partial void ExitIdleCam();
+
+    [VirtualFunction(80)]
+    public partial bool IsInIdleCam();
 
     [VirtualFunction(141)]
     public partial void ToggleUi(UiFlags flags, bool enable, bool unknown = true);

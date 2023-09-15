@@ -4,9 +4,9 @@ using FFXIVClientStructs.FFXIV.Component.GUI;
 namespace FFXIVClientStructs.FFXIV.Client.UI.Agent;
 // Client::UI::Agent::AgentModule
 
-// size = 0xC10
+// size = 0xDB8
 // ctor E8 ?? ?? ?? ?? 48 8B 85 ?? ?? ?? ?? 49 8B CF 48 89 87
-[StructLayout(LayoutKind.Explicit, Size = 0xD78)]
+[StructLayout(LayoutKind.Explicit, Size = 0xDB8)]
 public unsafe partial struct AgentModule
 {
     public static AgentModule* Instance() => Framework.Instance()->GetUiModule()->GetAgentModule();
@@ -18,11 +18,11 @@ public unsafe partial struct AgentModule
     [FieldOffset(0x14)] public uint FrameCounter;
     [FieldOffset(0x18)] public float FrameDelta;
 
-    [FixedSizeArray<Pointer<AgentInterface>>(425)]
-    [FieldOffset(0x20)] public fixed byte Agents[425 * 8];
+    [FixedSizeArray<Pointer<AgentInterface>>(432)]
+    [FieldOffset(0x20)] public fixed byte Agents[432 * 8];
 
-    [FieldOffset(0xD68)] public UIModule* UIModulePtr;
-    [FieldOffset(0xD70)] public AgentModule* AgentModulePtr;
+    [FieldOffset(0xDA8)] public UIModule* UIModulePtr;
+    [FieldOffset(0xDB0)] public AgentModule* AgentModulePtr;
 
     [MemberFunction("E8 ?? ?? ?? ?? 83 FE 0D")]
     public partial AgentInterface* GetAgentByInternalID(uint agentID);
@@ -120,6 +120,19 @@ public unsafe partial struct AgentModule
     public AgentMiragePrismPrismBox* GetAgentMiragePrismPrismBox()
     {
         return (AgentMiragePrismPrismBox*)GetAgentByInternalId(AgentId.MiragePrismPrismBox);
+    }
+
+    public AgentTryon* GetAgentTryon()
+    {
+        return (AgentTryon*)GetAgentByInternalId(AgentId.Tryon);
+    }
+
+    public AgentIKDFishingLog* GetAgentIKDFishingLog() {
+        return (AgentIKDFishingLog*)GetAgentByInternalId(AgentId.IKDFishingLog);
+    }
+
+    public AgentIKDResult* GetAgentIKDResult() {
+        return (AgentIKDResult*)GetAgentByInternalId(AgentId.IKDResult);
     }
 }
 
@@ -466,6 +479,14 @@ public enum AgentId : uint {
     McGuffin = 368, //Collection
     CraftActionSimulator = 369,
 
+    //Ocean Fishing
+    IKDSchedule = 370,
+    IKDFishingLog = 371,
+    IKDResult = 372,
+    IKDMission = 373,
+
+    InclusionShop = 374, //Item Exchange
+
     MycWarResultNotebook = 376,
     MycInfo = 377, //Bozja Info
     MycItemBox = 378, //Bozja Lost Finds Cache
@@ -513,10 +534,10 @@ public enum AgentId : uint {
 
     VVDNotebook = 423,
     VVDFinder = 424,
-
     TofuList = 425,
     
     BannerParty = 428,
     BannerMIP = 429,
+
     PvPMap = 432
 }

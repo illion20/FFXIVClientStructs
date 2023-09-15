@@ -19,7 +19,7 @@ public enum NodeType : ushort
 // 'visible' will change visibility immediately, the rest rely on other stuff to happen so they dont do anything
 // top and bottom assumed based on a scrollbar, lots of left-aligned text has AnchorLeft set
 [Flags]
-public enum NodeFlags
+public enum NodeFlags : ushort
 {
     AnchorTop = 0x01,
     AnchorLeft = 0x02,
@@ -101,11 +101,13 @@ public unsafe partial struct AtkResNode : ICreatable
 
     // asm accesses these fields together so this is one 32bit field with priority+flags
     [FieldOffset(0x9C)] public ushort Priority;
+    [Obsolete("Use NodeFlags", false)]
     [FieldOffset(0x9E)] public short Flags;
+    [FieldOffset(0x9E)] public NodeFlags NodeFlags;
     [FieldOffset(0xA0)] public uint Flags_2; // bit 1 = has changes, ClipCount is bits 10-17, idk its a mess
     [FieldOffset(0xA0)] public uint DrawFlags;
 
-    public bool IsVisible => (Flags & 0x10) == 0x10;
+    public bool IsVisible => NodeFlags.HasFlag(NodeFlags.Visible);
     
     [MemberFunction("E9 ?? ?? ?? ?? 33 C0 48 83 C4 20 5B C3 66 90")]
     public partial void Ctor();
@@ -206,7 +208,19 @@ public unsafe partial struct AtkResNode : ICreatable
 
     [MemberFunction("E8 ?? ?? ?? ?? 0F B7 D5 48 8B CF")]
     public partial void SetScaleY(float y);
-    
+
+    [MemberFunction("E8 ?? ?? ?? ?? 49 8B 4C FE")]
+    public partial float GetX();
+
+    [MemberFunction("E8 ?? ?? ?? ?? 0F BE 43 10")]
+    public partial float GetY();
+
+    [MemberFunction("E8 ?? ?? ?? ?? 0F BF 07")]
+    public partial void SetX(float x);
+
+    [MemberFunction("E8 ?? ?? ?? ?? 66 03 BE")]
+    public partial void SetY(float y);
+
     [MemberFunction("E8 ?? ?? ?? ?? 66 03 C0")]
     public partial ushort GetWidth();
 
