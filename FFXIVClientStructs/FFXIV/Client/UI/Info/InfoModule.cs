@@ -1,54 +1,80 @@
-﻿using FFXIVClientStructs.FFXIV.Client.System.String;
+using FFXIVClientStructs.FFXIV.Client.System.String;
 
 namespace FFXIVClientStructs.FFXIV.Client.UI.Info;
 
+// Client::UI::Info::InfoModule
+[GenerateInterop]
 [StructLayout(LayoutKind.Explicit, Size = 0x1C70)]
-public unsafe partial struct InfoModule
-{
-    [FieldOffset(0x1978)] public fixed long InfoProxyArray[34];
+public unsafe partial struct InfoModule {
+    public static InfoModule* Instance() => UIModule.Instance()->GetInfoModule();
+
+    [FieldOffset(0x1978), FixedSizeArray] internal FixedSizeArray34<Pointer<InfoProxyInterface>> _infoProxies;
     [FieldOffset(0x1A88)] public ulong LocalContentId;
     [FieldOffset(0x1A90)] public Utf8String LocalCharName;
     [FieldOffset(0x1AF8)] public Utf8String UnkString1;
     [FieldOffset(0x1B60)] public Utf8String UnkString2;
     [FieldOffset(0x1BC8)] public Utf8String UnkString3;
+    [FieldOffset(0x1C30)] public ulong OnlineStatusFlags;
 
-    public InfoProxyInterface* GetInfoProxyById(InfoProxyId id)
-        => GetInfoProxyById((uint)id);
+    [MemberFunction("E8 ?? ?? ?? ?? 45 85 E4 7E 5C")]
+    public partial InfoProxyInterface* GetInfoProxyById(InfoProxyId id);
 
-    [MemberFunction("E8 ?? ?? ?? ?? 48 8B 55 68")]
-    public partial InfoProxyInterface* GetInfoProxyById(uint id);
+    [MemberFunction("E8 ?? ?? ?? ?? 49 C7 C1 ?? ?? ?? ?? 48 8D 8C 24 ?? ?? ?? ??")]
+    public partial byte* GetLocalCharacterName();
+
+    [MemberFunction("E8 ?? ?? ?? ?? 49 39 07")]
+    public partial ulong GetLocalContentId();
+
+    /// <summary>
+    /// Checks if the local player has a specific online status set.
+    /// </summary>
+    /// <param name="id">The RowId in the OnlineStatus sheet.</param>
+    [MemberFunction("48 8B 81 ?? ?? ?? ?? 0F B6 CA 48 D3 E8")]
+    public partial bool IsOnlineStatusSet(uint id);
+
+    /// <summary>
+    /// Sets the local player's online status to the specified flag bitmask.
+    /// Sent by the server; devs should not call this manually. May be called multiple times.
+    /// </summary>
+    /// <param name="flags">A bitfield representing set flags.</param>
+    [MemberFunction("48 89 91 ?? ?? ?? ?? 48 8B 89 ?? ?? ?? ?? 48 85 C9 0F 85")]
+    public partial void SetOnlineStatusFlags(ulong flags);
+
+    /// <summary>
+    /// Checks if the local player is in a cross world duty.
+    /// </summary>
+    [MemberFunction("E8 ?? ?? ?? ?? 44 8B 8C 24 ?? ?? ?? ?? 84 C0")]
+    public partial bool IsInCrossWorldDuty();
 }
-public enum InfoProxyId : uint
-{
-    //ShellCommandChatLinkShell refers to 3,18
-    //Party Decline, PartyInv,PartyJoin  refer to 2
+
+public enum InfoProxyId : uint {
     //ShellCommandDice refers to  3, 13(Fc), 18 ,24
-    //AgentChatLogvf9 refers to 18
-    //15 and 16 are the same class
-    Party = 0,
-    Party2 = 1,
+    PartyMember = 0,
+    PartyMemberMji = 1,
     PartyInvite = 2,
-    LinkShell = 3,
-    LinkShellMember = 4,
+    Linkshell = 3,
+    LinkshellMember = 4,
     Blacklist = 5,
     FriendList = 6,
-    FriendList2 = 7,
+    FriendListMji = 7,
     Letter = 8,
     PlayerSearch = 9,
-    SearchComment = 10, //0xa
-    //Maybe Retainer(List) = 11, or gets something needed there
-    ItemSearch = 12,
+    Detail = 10,
+    ItemSearch = 11,
+    CatalogSearch = 12,
     FreeCompany = 13,
-    FreeCompanyCreate = 14,
+    FreeCompanyInvite = 14,
     FreeCompanyMember = 15,
-    FreeCompanyMember2 = 16,
-    //OTherFCStuff = 17,
-    LinkShellChat = 18,
+    FreeCompanyMemberMji = 16,
+    FreeCompanyCreate = 17,
+    Chat = 18,
     CrossRealmParty = 19,
-    CrossWorldLinkShell = 29,
-    CrossWorldLinkShellMember = 30,
+    NoviceNetwork = 20,
+    NoviceNetworkMember = 21,
+    NoviceNetworkMentor = 22,
+    CrossWorldLinkshell = 29,
+    CrossWorldLinkshellMember = 30,
     CircleList = 31,
     Circle = 32,
-    CircleFinder = 33,
-
+    CircleFinder = 33
 }

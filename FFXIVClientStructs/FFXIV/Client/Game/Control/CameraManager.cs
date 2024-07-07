@@ -1,8 +1,11 @@
-﻿namespace FFXIVClientStructs.FFXIV.Client.Game.Control;
+namespace FFXIVClientStructs.FFXIV.Client.Game.Control;
 
+// Client::Game::Control::CameraManager
+[GenerateInterop]
 [StructLayout(LayoutKind.Explicit, Size = 0x180)]
-public unsafe partial struct CameraManager
-{
+public unsafe partial struct CameraManager {
+    public static CameraManager* Instance() => (CameraManager*)Control.Instance();
+
     [FieldOffset(0x00)] public Camera* Camera;
     [FieldOffset(0x08)] public LowCutCamera* LowCutCamera;
     [FieldOffset(0x10)] public LobbyCamera* LobbCamera;
@@ -14,8 +17,6 @@ public unsafe partial struct CameraManager
 
     [FieldOffset(0x60)] public CameraBase UnkCamera; //not a pointer
 
-    [MemberFunction("E8 ?? ?? ?? ?? F7 80")]
+    [MemberFunction("E8 ?? ?? ?? ?? 41 0F B6 DF")]
     public partial Camera* GetActiveCamera();
-
-    public static CameraManager* Instance => (CameraManager*) Control.Instance();
 }

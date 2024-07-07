@@ -1,19 +1,18 @@
-﻿namespace FFXIVClientStructs.FFXIV.Client.Graphics.Render;
+using FFXIVClientStructs.FFXIV.Client.Graphics.Kernel;
+
+namespace FFXIVClientStructs.FFXIV.Client.Graphics.Render;
+
 // Client::Graphics::Render::RenderTargetManager
 //   Client::Graphics::Singleton
 //   Client::Graphics::Kernel::Notifier
-
 // WARNING: THIS IS OUT OF DATE
+[GenerateInterop]
+[Inherits<Notifier>]
 [StructLayout(LayoutKind.Explicit, Size = 0x4A0)]
-public unsafe partial struct RenderTargetManager
-{
-    [FieldOffset(0x0)] public void* vtbl;
-
-    [FieldOffset(0x8)] public Notifier Notifier;
+public unsafe partial struct RenderTargetManager {
 
     // the first 65 fields seem to be render target pointers
-    [FixedSizeArray<Pointer<Texture>>(65)]
-    [FieldOffset(0x20)] public fixed byte RenderTargetArray[8 * 65];
+    [FieldOffset(0x20), FixedSizeArray] internal FixedSizeArray64<Pointer<Texture>> _renderTargets;
 
     // specific ones i can name
     // offscreen renderer is used to render models for UI elements like the character window
@@ -40,12 +39,16 @@ public unsafe partial struct RenderTargetManager
     [FieldOffset(0x264)] public uint FarShadowMap_Height;
     [FieldOffset(0x268)] public bool UnkBool_1;
 
-    [FixedSizeArray<Pointer<Texture>>(49)]
-    [FieldOffset(0x270)] public fixed byte RenderTargetArray2[8 * 49];
+    [FieldOffset(0x270), FixedSizeArray] internal FixedSizeArray49<Pointer<Texture>> _renderTargets2;
 
-    [StaticAddress("48 8B 0D ?? ?? ?? ?? 48 8B B1 ?? ?? ?? ??", 3, isPointer: true)]
+    [FieldOffset(0x470)] public ushort DynamicResolutionActualTargetHeight; // seems to copy TargetHeight into ActualTargetHeight?
+    [FieldOffset(0x472)] public ushort DynamicResolutionTargetHeight;
+    [FieldOffset(0x474)] public ushort DynamicResolutionMaximumHeight;
+    [FieldOffset(0x476)] public ushort DynamicResolutionMinimumHeight;
+
+    [StaticAddress("48 8B 05 ?? ?? ?? ?? 48 8B 70 70 48 85 F6 74 09 48 8B 06 48 8B CE FF 50 10", 3, isPointer: true)]
     public static partial RenderTargetManager* Instance();
 
-    [MemberFunction("48 8B 05 ?? ?? ?? ?? 8B CA 48 8B 84 C8")]
+    [MemberFunction("E8 ?? ?? ?? ?? 48 8B 4F 30 48 8B D0 FF 57 38")]
     public partial Texture* GetCharaViewTexture(uint clientObjectIndex);
 }

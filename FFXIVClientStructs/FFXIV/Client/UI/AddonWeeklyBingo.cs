@@ -6,21 +6,20 @@ namespace FFXIVClientStructs.FFXIV.Client.UI;
 //   Component::GUI::AtkUnitBase
 //     Component::GUI::AtkEventListener
 [Addon("WeeklyBingo")]
-[StructLayout(LayoutKind.Explicit, Size = 0x23C8)]
-public unsafe struct AddonWeeklyBingo
-{
-    [FieldOffset(0x0)] public AtkUnitBase AtkUnitBase;
-    [FieldOffset(0x220)] public DutySlotList DutySlotList;
-    [FieldOffset(0x18E8)] public StringThing StringThing;
-    [FieldOffset(0x1938)] public StickerSlotList StickerSlotList;
-    [FieldOffset(0x1F20)] public uint NumStickersPlaced;
+[GenerateInterop]
+[Inherits<AtkUnitBase>]
+[StructLayout(LayoutKind.Explicit, Size = 0x23D8)]
+public partial struct AddonWeeklyBingo {
+    [FieldOffset(0x230)] public DutySlotList DutySlotList;
+
+    [FieldOffset(0x18F8)] public StringThing StringThing;
+    [FieldOffset(0x1948)] public StickerSlotList StickerSlotList;
+    [FieldOffset(0x1F30)] public uint NumStickersPlaced;
 }
 
 [StructLayout(LayoutKind.Explicit, Size = 0x16C8)]
-public unsafe struct DutySlotList
-{
-    [FieldOffset(0x0)] public void** vtbl;
-    [FieldOffset(0x8)] public void* addon; // AddonWeeklyBingo*
+public unsafe struct DutySlotList {
+    [FieldOffset(0x8)] public AddonWeeklyBingo* Addon;
     [FieldOffset(0x24)] public uint NumSecondChances;
     [FieldOffset(0x28)] public DutySlot DutySlot1;
     [FieldOffset(0x190)] public DutySlot DutySlot2;
@@ -39,14 +38,12 @@ public unsafe struct DutySlotList
     [FieldOffset(0x13D8)] public DutySlot DutySlot15;
     [FieldOffset(0x1540)] public DutySlot DutySlot16;
 
-    //These overrun the size and are marked with error obsolete due to it
-    [FieldOffset(0x18C8), Obsolete("Overrun struct size do not use", true)] public AtkComponentButton* SecondChanceButton;
-    [FieldOffset(0x18D0), Obsolete("Overrun struct size do not use", true)] public AtkComponentButton* CancelButton;
-    [FieldOffset(0x18D8), Obsolete("Overrun struct size do not use", true)] public AtkTextNode* SecondChancesRemaining;
-    [FieldOffset(0x18E0), Obsolete("Overrun struct size do not use", true)] public AtkResNode* DutyContainer;
+    [FieldOffset(0x16A8)] public AtkComponentButton* SecondChanceButton;
+    [FieldOffset(0x16B0)] public AtkComponentButton* CancelButton;
+    [FieldOffset(0x16B8)] public AtkTextNode* SecondChancesRemaining;
+    [FieldOffset(0x16C0)] public AtkResNode* DutyContainer;
 
-    public DutySlot this[int index] => index switch
-    {
+    public DutySlot this[int index] => index switch {
         0 => DutySlot1,
         1 => DutySlot2,
         2 => DutySlot3,
@@ -63,14 +60,12 @@ public unsafe struct DutySlotList
         13 => DutySlot14,
         14 => DutySlot15,
         15 => DutySlot16,
-        _ => throw new ArgumentOutOfRangeException(nameof(Index), "Valid indexes are 0 through 15 inclusive.")
+        _ => throw new ArgumentOutOfRangeException(nameof(index), "Valid indexes are 0 through 15 inclusive.")
     };
 }
 
 [StructLayout(LayoutKind.Explicit, Size = 0x168)]
-public unsafe struct DutySlot
-{
-    [FieldOffset(0x0)] public void** vtbl;
+public unsafe struct DutySlot {
     [FieldOffset(0x8)] public AddonWeeklyBingo* addon; // AddonWeeklyBingo*
     [FieldOffset(0x10)] public int index; // 0-15
 
@@ -83,31 +78,29 @@ public unsafe struct DutySlot
 }
 
 [StructLayout(LayoutKind.Explicit, Size = 0x50)]
-public unsafe struct StringThing
-{
-    [FieldOffset(0x0)] public void* vtbl;
-
-    [FieldOffset(0x08)] public byte*
+public unsafe struct StringThing {
+    [FieldOffset(0x08)]
+    public byte*
         FullSealsText; // No more seals can be applied. Deliver the journal to Khloe Aliapoh to receive your reward.
 
-    [FieldOffset(0x10)] public byte*
+    [FieldOffset(0x10)]
+    public byte*
         OneOrMoreLinesText; // One or more lines of seals have been completed. Deliver the journal to Khloe Aliapoh to receive your reward or continue adventuring to add more seals.
 
-    [FieldOffset(0x18)] public byte*
+    [FieldOffset(0x18)]
+    public byte*
         SecondChancePointsText; // Second Chance points can be used to increase your chances of completing lines.
 
     [FieldOffset(0x20)] public byte* ReceiveSealCompleteText; // Select a completed duty to receive a seal.
     [FieldOffset(0x28)] public byte* ReceiveSealIncompleteText; // Complete a task to receive a seal.
     [FieldOffset(0x30)] public byte* SecondChanceRetryText; // Select a completed duty to be rendered incomplete.
-    [FieldOffset(0x40)] public void* addon;
+    [FieldOffset(0x40)] public AddonWeeklyBingo* Addon;
     [FieldOffset(0x48)] public AtkTextNode* TextNode;
 }
 
 [StructLayout(LayoutKind.Explicit, Size = 0x590)]
-public unsafe struct StickerSlotList
-{
-    [FieldOffset(0x0)] public void** vtbl;
-    [FieldOffset(0x8)] public void* addon; // AddonWeeklyBingo*
+public unsafe struct StickerSlotList {
+    [FieldOffset(0x8)] public AddonWeeklyBingo* Addon;
     [FieldOffset(0x10)] public StickerSlot StickerSlot1;
     [FieldOffset(0x68)] public StickerSlot StickerSlot2;
     [FieldOffset(0xC0)] public StickerSlot StickerSlot3;
@@ -125,8 +118,7 @@ public unsafe struct StickerSlotList
     [FieldOffset(0x4E0)] public StickerSlot StickerSlot15;
     [FieldOffset(0x538)] public StickerSlot StickerSlot16;
 
-    public StickerSlot this[int index] => index switch
-    {
+    public StickerSlot this[int index] => index switch {
         0 => StickerSlot1,
         1 => StickerSlot2,
         2 => StickerSlot3,
@@ -148,10 +140,8 @@ public unsafe struct StickerSlotList
 }
 
 [StructLayout(LayoutKind.Explicit, Size = 0x58)]
-public unsafe struct StickerSlot
-{
-    [FieldOffset(0x0)] public void** vtbl;
-    [FieldOffset(0x8)] public void* addon; // AddonWeeklyBingo*
+public unsafe struct StickerSlot {
+    [FieldOffset(0x8)] public AddonWeeklyBingo* Addon;
     [FieldOffset(0x10)] public int index; // 1-16
 
     [FieldOffset(0x20)] public AtkComponentButton* Button;

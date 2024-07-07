@@ -1,11 +1,10 @@
 namespace FFXIVClientStructs.FFXIV.Component.GUI;
 
+[GenerateInterop(isInherited: true)]
 [StructLayout(LayoutKind.Explicit, Size = 0x20)]
-public unsafe struct AtkArrayData
-{
-    [FieldOffset(0x0)] public void* vtbl;
+public unsafe partial struct AtkArrayData {
     [FieldOffset(0x8)] public int Size;
-    [FieldOffset(0xC)] public fixed byte SubscribedAddons[16];
+    [FieldOffset(0xC), FixedSizeArray] internal FixedSizeArray16<byte> _subscribedAddons;
     [FieldOffset(0x1C)] public byte Unk1C;
     [FieldOffset(0x1D)] public byte SubscribedAddonsCount;
     /// <remarks>
@@ -15,13 +14,4 @@ public unsafe struct AtkArrayData
     /// </remarks>
     [FieldOffset(0x1E)] public byte UpdateState;
     [FieldOffset(0x1F)] public sbyte RefCount; // initialized to -1, used by Agents
-
-    [Obsolete("Use AtkArrayData.SubscribedAddonsCount")]
-    [FieldOffset(0x1D)] public byte Unk1D;
-
-    [Obsolete("Use AtkArrayData.UpdateState")]
-    [FieldOffset(0x1E)] public bool HasModifiedData;
-
-    [Obsolete("Use AtkArrayData.RefCount")]
-    [FieldOffset(0x1F)] public byte Unk1F;
 }

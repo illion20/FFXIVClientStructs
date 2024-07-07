@@ -1,11 +1,34 @@
-﻿namespace FFXIVClientStructs.FFXIV.Client.Game.Event;
+namespace FFXIVClientStructs.FFXIV.Client.Game.Event;
 
-[StructLayout(LayoutKind.Explicit)]
-public unsafe partial struct EventGPoseController
-{
-    [MemberFunction("E8 ?? ?? ?? ?? E8 ?? ?? ?? ?? 80 BE 8C 00 00 00 02")]
+// Client::Game::Event::EventGPoseController
+// ctor "E8 ?? ?? ?? ?? 80 A3 ?? ?? ?? ?? ?? B8 ?? ?? ?? ?? 48 89 83"
+[GenerateInterop]
+[StructLayout(LayoutKind.Explicit, Size = 0x2F80)]
+public unsafe partial struct EventGPoseController {
+    [MemberFunction("40 53 56 41 54 41 56 48 83 EC 28 33 F6")]
     public partial void AddCharacterToGPose(Character.Character* character, ulong a1 = 0);
 
     [MemberFunction("45 33 D2 4C 8D 81 38 2A 00 00 41 8B C2 4C 8B C9 49 3B 10 ?? ?? FF C0 49 83 C0 18 83 F8 1E ?? ?? ?? 8B")]
     public partial void RemoveCharacterFromGPose(Character.Character* character);
+
+    [MemberFunction("E8 ?? ?? ?? ?? 41 88 85 ?? ?? ?? ?? 49 8B CC")]
+    public partial bool IsFaceCameraEnabled();
+
+    [MemberFunction("E9 ?? ?? ?? ?? 48 8B 4F 08 48 8B 01 FF 90 ?? ?? ?? ?? 48 8B C8 BA ?? ?? ?? ?? E8 ?? ?? ?? ?? 48 85 C0 74 12")]
+    public partial void ToggleFaceCamera();
+
+    [MemberFunction("E8 ?? ?? ?? ?? 41 0F B6 BD ?? ?? ?? ?? 49 8D 4F 20")]
+    public partial bool IsGazeCameraEnabled();
+
+    [MemberFunction("48 8B 05 ?? ?? ?? ?? 4C 8B C1 48 85 C0 74 64")]
+    public partial void ToggleGazeCamera();
+
+    [MemberFunction("E8 ?? ?? ?? ?? E9 ?? ?? ?? ?? E8 ?? ?? ?? ?? E9 ?? ?? ?? ?? F3 41 0F 10 9E ?? ?? ?? ??")]
+    public partial void ToggleMotionFreeze(bool allCharacters);
+
+    [MemberFunction("E8 ?? ?? ?? ?? 4C 39 23")]
+    public partial void EnableCameraLight(uint index);
+
+    [MemberFunction("48 83 EC ?? 83 FA ?? 73 ?? 8B C2 48 89 5C 24 ?? 48 8D 1C ?? 48 8B 8B")]
+    public partial void DisableCameraLight(uint index);
 }

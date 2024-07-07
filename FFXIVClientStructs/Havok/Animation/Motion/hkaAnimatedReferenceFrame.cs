@@ -1,15 +1,16 @@
-﻿namespace FFXIVClientStructs.Havok;
+using FFXIVClientStructs.Havok.Common.Base.Object;
 
-[StructLayout(LayoutKind.Sequential)]
-public struct hkaAnimatedReferenceFrame
-{
-	public enum hkaReferenceFrameTypeEnum : int
-	{
-		Unknown = 0,
-		Default = 1,
-		Parametric = 2,
-	}
-	
-	public hkReferencedObject hkReferencedObject;
-	public hkaReferenceFrameTypeEnum FrameType;
+namespace FFXIVClientStructs.Havok.Animation.Motion;
+
+[GenerateInterop]
+[Inherits<hkReferencedObject>]
+[StructLayout(LayoutKind.Explicit, Size = 0x18)]
+public partial struct hkaAnimatedReferenceFrame {
+    public enum hkaReferenceFrameTypeEnum {
+        Unknown = 0,
+        Default = 1,
+        Parametric = 2,
+    }
+
+    [FieldOffset(0x10)] public hkaReferenceFrameTypeEnum FrameType;
 }

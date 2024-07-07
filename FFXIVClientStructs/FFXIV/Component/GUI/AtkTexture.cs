@@ -1,41 +1,26 @@
-using FFXIVClientStructs.FFXIV.Client.Graphics.Render;
+using FFXIVClientStructs.FFXIV.Client.Graphics.Kernel;
 using FFXIVClientStructs.FFXIV.Client.System.Memory;
 
 namespace FFXIVClientStructs.FFXIV.Component.GUI;
 
-public enum TextureType : byte
-{
-    Resource = 1,
-    Crest = 2,
-    KernelTexture = 3
-}
-
 // Component::GUI::AtkTexture
-
-// size = 0x18
-// no explicit ctor
+[GenerateInterop]
 [StructLayout(LayoutKind.Explicit, Size = 0x18)]
-public unsafe partial struct AtkTexture : ICreatable
-{
-    [FieldOffset(0x0)] public void* vtbl;
-
+public unsafe partial struct AtkTexture : ICreatable {
     // union type
-    [FieldOffset(0x8)] public AtkTextureResource* Resource;
-    [FieldOffset(0x8)] public void* Crest;
-    [FieldOffset(0x8)] public Texture* KernelTexture;
+    [FieldOffset(0x8), CExporterUnion("Texture")] public AtkTextureResource* Resource;
+    [FieldOffset(0x8), CExporterUnion("Texture")] public void* Crest;
+    [FieldOffset(0x8), CExporterUnion("Texture")] public Texture* KernelTexture;
     [FieldOffset(0x10)] public TextureType TextureType;
-    [FieldOffset(0x11)] public bool TextureReady; // Use IsTextureReady() instead
-    [Obsolete("Use IsTextureReady()")]
-    [FieldOffset(0x11)] public byte UnkBool_2;
+    [FieldOffset(0x11)] private bool CachedIsTextureReady; // Use IsTextureReady() to get this
 
-    [MemberFunction("E8 ?? ?? ?? ?? 48 8B 87 ?? ?? ?? ?? 48 8D 0D ?? ?? ?? ?? 4C 89 BF")]
+    [MemberFunction("E8 ?? ?? ?? ?? 48 8B 87 ?? ?? ?? ?? 48 8D 0D ?? ?? ?? ?? 45 33 ED")]
     public partial void Ctor();
 
-    [MemberFunction("E8 ?? ?? ?? ?? 41 8D 84 24 ?? ?? ?? ??")]
-    public partial int LoadIconTexture(int iconId, int version = 1);
+    [MemberFunction("E9 ?? ?? ?? ?? 0F BA F0 14")]
+    public partial int LoadIconTexture(uint iconId, int version = 1);
 
-    [GenerateCStrOverloads]
-    [MemberFunction("E8 ?? ?? ?? ?? 4C 8B 6C 24 ?? 4C 8B 5C 24")]
+    [MemberFunction("E8 ?? ?? ?? ?? 85 C0 75 2F 48 8B 83"), GenerateStringOverloads]
     public partial int LoadTexture(byte* path, int version = 1);
 
     [MemberFunction("E8 ?? ?? ?? ?? C6 43 10 02")]
@@ -52,4 +37,10 @@ public unsafe partial struct AtkTexture : ICreatable
 
     [VirtualFunction(0)]
     public partial void Destroy(bool free);
+}
+
+public enum TextureType : byte {
+    Resource = 1,
+    Crest = 2,
+    KernelTexture = 3
 }

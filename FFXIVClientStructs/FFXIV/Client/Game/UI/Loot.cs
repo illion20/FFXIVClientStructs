@@ -1,21 +1,26 @@
-﻿namespace FFXIVClientStructs.FFXIV.Client.Game.UI;
+using AtkEventInterface = FFXIVClientStructs.FFXIV.Component.GUI.AtkModuleInterface.AtkEventInterface;
 
+namespace FFXIVClientStructs.FFXIV.Client.Game.UI;
+
+// Client::Game::UI::Loot
+//   Component::GUI::AtkModuleInterface::AtkEventInterface
+// ctor "48 89 5C 24 ?? 48 89 74 24 ?? 57 48 83 EC 20 48 8B D9 C6 41 08 00"
+[GenerateInterop]
+[Inherits<AtkEventInterface>]
 [StructLayout(LayoutKind.Explicit, Size = 0x6A0)]
-public unsafe partial struct Loot
-{
-    public static Loot* Instance() => &UIState.Instance()->Loot;
+public unsafe partial struct Loot {
+    [StaticAddress("48 8D 0D ?? ?? ?? ?? E8 ?? ?? ?? ?? 89 44 24 60", 3)]
+    public static partial Loot* Instance();
 
-    [FixedSizeArray<LootItem>(16)]
-    [FieldOffset(0x10)] public fixed byte ItemArray[16 * 0x40]; // 16 * LootItem
-    
+    [FieldOffset(0x10), FixedSizeArray] internal FixedSizeArray16<LootItem> _items;
+
     [FieldOffset(0x410)] public int SelectedIndex;
     [FieldOffset(0x418)] public uint UnkObjectId;
     [FieldOffset(0x678)] public uint UnkObjectId2;
 }
 
 [StructLayout(LayoutKind.Explicit, Size = 0x40)]
-public unsafe struct LootItem 
-{
+public unsafe struct LootItem {
     [FieldOffset(0x00)] public uint ChestObjectId;
     [FieldOffset(0x04)] public uint ChestItemIndex; // This loot item's index in the chest it came from
     [FieldOffset(0x08)] public uint ItemId;
@@ -28,8 +33,7 @@ public unsafe struct LootItem
     [FieldOffset(0x38)] public LootMode LootMode;
 }
 
-public enum RollState 
-{
+public enum RollState {
     UpToNeed = 0, //Can roll up to Need
     UpToGreed = 1,//Can roll up to Gree
     UpToPass = 2, //Can only pass
@@ -38,8 +42,7 @@ public enum RollState
     Unknown = 28, // Default value
 }
 
-public enum RollResult
-{
+public enum RollResult {
     UnAwarded = 0,
     Needed = 1,
     Greeded = 2,
@@ -48,8 +51,7 @@ public enum RollResult
     Unknown = 7, // Default Value
 }
 
-public enum LootMode
-{
+public enum LootMode {
     Normal = 0,
     GreedOnly = 1,
     Unavailable = 2,

@@ -1,10 +1,10 @@
-﻿namespace FFXIVClientStructs.FFXIV.Component.GUI;
+namespace FFXIVClientStructs.FFXIV.Component.GUI;
 
+[GenerateInterop]
+[Inherits<AtkUldComponentDataBase>]
 [StructLayout(LayoutKind.Explicit, Size = 0x34)]
-public unsafe struct AtkUldComponentDataSlider
-{
-    [FieldOffset(0x00)] public AtkUldComponentDataBase Base;
-    [FieldOffset(0x0C)] public fixed uint Nodes[4];
+public unsafe partial struct AtkUldComponentDataSlider {
+    [FieldOffset(0x0C), FixedSizeArray] internal FixedSizeArray4<uint> _nodes;
     [FieldOffset(0x1C)] public int Min;
     [FieldOffset(0x20)] public int Max;
     [FieldOffset(0x24)] public int Step;

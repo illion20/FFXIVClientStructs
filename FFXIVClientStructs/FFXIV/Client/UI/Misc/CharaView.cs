@@ -1,7 +1,7 @@
 using FFXIVClientStructs.FFXIV.Client.Game;
 using FFXIVClientStructs.FFXIV.Client.Game.Character;
 using FFXIVClientStructs.FFXIV.Client.System.Memory;
-using FFXIVClientStructs.FFXIV.Component.GUI;
+using FFXIVClientStructs.FFXIV.Client.UI.Agent;
 
 namespace FFXIVClientStructs.FFXIV.Client.UI.Misc;
 
@@ -15,9 +15,9 @@ namespace FFXIVClientStructs.FFXIV.Client.UI.Misc;
 //  4 used in BannerList, BannerEdit
 //  0 - 7 used in BannerParty
 //
-[StructLayout(LayoutKind.Explicit, Size = 0x2C8)]
-public unsafe partial struct CharaView : ICreatable
-{
+[GenerateInterop(isInherited: true)]
+[StructLayout(LayoutKind.Explicit, Size = 0x318)]
+public unsafe partial struct CharaView : ICreatable {
     [FieldOffset(0x8)] public uint State; // initialization state of KernelTexture, Camera etc. that happens in Render(), 6 = ready for use
     [FieldOffset(0xC)] public uint ClientObjectId; // ID of object in ClientObjectManager, basically ClientObjectIndex + 40
     [FieldOffset(0x10)] public uint ClientObjectIndex;
@@ -35,8 +35,7 @@ public unsafe partial struct CharaView : ICreatable
     //[FieldOffset(0xC0)] public float UnkC0;
     [FieldOffset(0xC4)] public float ZoomRatio;
 
-    [FixedSizeArray<CharaViewItem>(14)]
-    [FieldOffset(0xD0)] public fixed byte Items[0x20 * 14];
+    [FieldOffset(0xD0), FixedSizeArray] internal FixedSizeArray14<CharaViewItem> _items;
 
     [FieldOffset(0x2B8)] public bool CharacterDataCopied;
     [FieldOffset(0x2B9)] public bool CharacterLoaded;
@@ -44,114 +43,54 @@ public unsafe partial struct CharaView : ICreatable
     public static CharaView* Create()
         => IMemorySpace.GetUISpace()->Create<CharaView>();
 
-    #region old struct
-    [Obsolete("Use State", true)]
-    [FieldOffset(0x008)] public uint Unk8;
-    [Obsolete("Use ClientObjectId", true)]
-    [FieldOffset(0x00C)] public uint CutsceneActorIndex; // 40 to 47
-    [Obsolete("Use ClientObjectIndex", true)]
-    [FieldOffset(0x010)] public uint ScreenActorIndex;   // 0 to 7, not 240 to 247
-    [Obsolete("Use CameraType", true)]
-    [FieldOffset(0x014)] public uint Unk14;
-    [Obsolete("Use Camera", true)]
-    [FieldOffset(0x020)] public void* Unk20;
-
-    [Obsolete("Unknown", true)]
-    [FieldOffset(0x0C0)] public uint UnkC0;
-    [Obsolete("Use Agent", true)]
-    [FieldOffset(0x030)] public ulong Unk30;
-    [Obsolete("Unknown", true)]
-    [FieldOffset(0x038)] public ulong Unk38;
-
-    [Obsolete("Use ItemsSpan", true)]
-    [FieldOffset(0x0D0)] public UnkStruct UnkD0;
-    [Obsolete("Use ItemsSpan", true)]
-    [FieldOffset(0x0F0)] public UnkStruct UnkF0;
-    [Obsolete("Use ItemsSpan", true)]
-    [FieldOffset(0x110)] public UnkStruct Unk110;
-    [Obsolete("Use ItemsSpan", true)]
-    [FieldOffset(0x130)] public UnkStruct Unk130;
-    [Obsolete("Use ItemsSpan", true)]
-    [FieldOffset(0x150)] public UnkStruct Unk150;
-    [Obsolete("Use ItemsSpan", true)]
-    [FieldOffset(0x170)] public UnkStruct Unk170;
-    [Obsolete("Use ItemsSpan", true)]
-    [FieldOffset(0x190)] public UnkStruct Unk190;
-
-    [Obsolete("Use CharacterDataCopied and CharacterLoaded", true)]
-    [FieldOffset(0x2B8)] public ushort Unk2B8;
-    [Obsolete("Unknown", true)]
-    [FieldOffset(0x290)] public ulong Unk290;
-    [Obsolete("Unknown", true)]
-    [FieldOffset(0x298)] public ulong Unk298;
-    [Obsolete("Unknown", true)]
-    [FieldOffset(0x2A0)] public ulong Unk2A0;
-    [Obsolete("Unknown", true)]
-    [FieldOffset(0x2A8)] public ulong Unk2A8;
-    [Obsolete("Unknown", true)]
-    [FieldOffset(0x2B0)] public ulong Unk2B0;
-
-    [Obsolete("Use CharaViewItem", true)]
-    [StructLayout(LayoutKind.Explicit, Size = 0x20)]
-    public struct UnkStruct // related to equipped/glamoured items
-    {
-        [FieldOffset(0x00)] public ushort Unk0;
-        [FieldOffset(0x03)] public byte Unk1;
-        [FieldOffset(0x04)] public byte Unk2;
-        [FieldOffset(0x08)] public ulong Unk3; // ItemID
-        [FieldOffset(0x10)] public ulong Unk4;
-        [FieldOffset(0x18)] public ulong Unk5;
-    }
-    #endregion
-
-    [MemberFunction("E8 ?? ?? ?? ?? 41 80 A6 ?? ?? ?? ?? ?? 48 8D 05")]
-    public readonly partial void Ctor();
+    [MemberFunction("E8 ?? ?? ?? ?? 89 B3 ?? ?? ?? ?? 48 8D 05 ?? ?? ?? ??")]
+    public partial void Ctor();
 
     [VirtualFunction(0)]
-    public readonly partial void Dtor(bool freeMemory);
+    public partial void Dtor(bool freeMemory);
 
     [VirtualFunction(1)]
-    public readonly partial void Initialize(nint agent, int clientObjectId, nint agentCallbackReady);
+    public partial void Initialize(AgentInterface* agent, uint clientObjectId, nint agentCallbackReady);
 
     [VirtualFunction(2)]
-    public readonly partial void Release(); // aka Finalize
+    public partial void Release(); // aka Finalize
 
     [VirtualFunction(3)]
-    public readonly partial void ResetPositions();
+    public partial void ResetPositions();
 
     [MemberFunction("0F 10 02 0F 11 41 48")]
-    public readonly partial void SetCustomizeData(CharaViewCharacterData* data);
+    public partial void SetCustomizeData(CharaViewCharacterData* data);
 
-    [MemberFunction("E8 ?? ?? ?? ?? EB 27 8B D6")]
-    public readonly partial void Render(uint frameIndex);
+    [MemberFunction("E8 ?? ?? ?? ?? 49 8B 4C 24 ?? 8B 51 04")]
+    public partial void Render(uint frameIndex);
 
     [MemberFunction("E8 ?? ?? ?? ?? 48 85 C0 75 05 0F 57 C9")]
-    public readonly partial Character* GetCharacter();
+    public partial Character* GetCharacter();
 
     [MemberFunction("E8 ?? ?? ?? ?? 49 8D 4F 10 88 85")]
-    public readonly partial bool IsAnimationPaused();
+    public partial bool IsAnimationPaused();
 
-    [MemberFunction("E8 ?? ?? ?? ?? B2 01 48 8B CE E8 ?? ?? ?? ?? 32 C0")]
-    public readonly partial void ToggleAnimationPlayback(bool paused);
+    [MemberFunction("E8 ?? ?? ?? ?? B2 01 48 8B CF E8 ?? ?? ?? ?? 32 C0")]
+    public partial void ToggleAnimationPlayback(bool paused);
 
-    [MemberFunction("E8 ?? ?? ?? ?? 48 8B 47 28 BA")]
-    public readonly partial void UnequipGear(bool hasCharacterData = false, bool characterLoaded = true);
+    [MemberFunction("E8 ?? ?? ?? ?? 48 8B 45 77 48 8D 4D 87")]
+    public partial void UnequipGear(bool hasCharacterData = false, bool characterLoaded = true);
 
-    [MemberFunction("E8 ?? ?? ?? ?? 45 33 DB FF C3")]
-    public readonly partial void SetItemSlotData(byte slotId, uint itemId, byte stainId, int glamourItemId = 0, byte a6 = 1);
+    [MemberFunction("E8 ?? ?? ?? ?? FF C5 48 83 C3 1C")]
+    public partial void SetItemSlotData(byte slotId, uint itemId, byte stain1Id, byte stain2Id, uint glamourItemId = 0, bool applyCompanyCrest = true);
 
-    [MemberFunction("E8 ?? ?? ?? ?? B1 01 0F B6 86")]
-    public readonly partial void ToggleDrawWeapon(bool drawn);
+    [MemberFunction("E8 ?? ?? ?? ?? 44 0F B6 8D ?? ?? ?? ?? B0 01")]
+    public partial void ToggleDrawWeapon(bool drawn);
 }
 
+[GenerateInterop]
 [StructLayout(LayoutKind.Explicit, Size = 0x68)]
-public unsafe partial struct CharaViewCharacterData : ICreatable
-{
-    [FieldOffset(0)] public CustomizeData CustomizeData; // see Glamourer.Customization.CharacterCustomization
+public unsafe partial struct CharaViewCharacterData : ICreatable {
+    [FieldOffset(0)] public CustomizeData CustomizeData;
     //[FieldOffset(0x1A)] public byte Unk1A;
     //[FieldOffset(0x1B)] public byte Unk1B;
-    [FieldOffset(0x1C)] public fixed uint ItemIds[14];
-    [FieldOffset(0x54)] public fixed byte ItemStains[14];
+    [FieldOffset(0x1C), FixedSizeArray] internal FixedSizeArray14<uint> _itemIds;
+    [FieldOffset(0x54), FixedSizeArray] internal FixedSizeArray14<byte> _itemStains;
     [FieldOffset(0x62)] public byte ClassJobId;
     [FieldOffset(0x63)] public bool VisorHidden;
     [FieldOffset(0x64)] public bool WeaponHidden;
@@ -162,23 +101,21 @@ public unsafe partial struct CharaViewCharacterData : ICreatable
     public static CharaViewCharacterData* Create()
         => IMemorySpace.GetUISpace()->Create<CharaViewCharacterData>();
 
-    public static CharaViewCharacterData* CreateFromLocalPlayer()
-    {
+    public static CharaViewCharacterData* CreateFromLocalPlayer() {
         var obj = Create();
         obj->ImportLocalPlayerEquipment();
         return obj;
     }
 
-    [MemberFunction("E8 ?? ?? ?? ?? 4C 8D 45 10 48 8B CF")]
-    public readonly partial void Ctor();
+    [MemberFunction("E8 ?? ?? ?? ?? 4D 8D 4E 30")]
+    public partial void Ctor();
 
-    [MemberFunction("E9 ?? ?? ?? ?? 41 0F B6 40 ?? 88 42 62")]
-    public readonly partial void ImportLocalPlayerEquipment();
+    [MemberFunction("E8 ?? ?? ?? ?? 48 8B 57 28 45 33 F6")]
+    public partial void ImportLocalPlayerEquipment();
 }
 
 [StructLayout(LayoutKind.Explicit, Size = 0x20)]
-public unsafe struct CharaViewItem
-{
+public unsafe struct CharaViewItem {
     [FieldOffset(0x0)] public byte SlotId;
     [FieldOffset(0x1)] public byte EquipSlotCategory;
     [FieldOffset(0x2)] public byte GlamourEquipSlotCategory;

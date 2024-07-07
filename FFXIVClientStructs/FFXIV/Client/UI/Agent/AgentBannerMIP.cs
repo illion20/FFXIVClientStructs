@@ -1,5 +1,3 @@
-﻿using FFXIVClientStructs.FFXIV.Client.System.Framework;
-
 namespace FFXIVClientStructs.FFXIV.Client.UI.Agent;
 
 // Client::UI::Agent::AgentBannerMIP
@@ -7,10 +5,7 @@ namespace FFXIVClientStructs.FFXIV.Client.UI.Agent;
 //     Client::UI::Agent::AgentInterface
 //       Component::GUI::AtkModuleInterface::AtkEventInterface
 [Agent(AgentId.BannerMIP)]
+[GenerateInterop]
+[Inherits<AgentBannerInterface>]
 [StructLayout(LayoutKind.Explicit, Size = 0x38)]
-public unsafe partial struct AgentBannerMIP
-{
-    public static AgentBannerParty* Instance() => (AgentBannerParty*)Framework.Instance()->GetUiModule()->GetAgentModule()->GetAgentByInternalId(AgentId.BannerMIP);
-
-    [FieldOffset(0x0)] public AgentBannerInterface AgentBannerInterface;
-}
+public unsafe partial struct AgentBannerMIP;

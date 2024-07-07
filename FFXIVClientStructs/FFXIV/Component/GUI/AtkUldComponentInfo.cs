@@ -1,8 +1,8 @@
-﻿namespace FFXIVClientStructs.FFXIV.Component.GUI;
+namespace FFXIVClientStructs.FFXIV.Component.GUI;
 
+[GenerateInterop]
+[Inherits<AtkUldObjectInfo>]
 [StructLayout(LayoutKind.Explicit, Size = 0x18)]
-public struct AtkUldComponentInfo
-{
-    [FieldOffset(0x0)] public AtkUldObjectInfo ObjectInfo;
+public partial struct AtkUldComponentInfo {
     [FieldOffset(0x10)] public ComponentType ComponentType;
 }

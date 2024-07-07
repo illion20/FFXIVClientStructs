@@ -1,16 +1,16 @@
-﻿using FFXIVClientStructs.FFXIV.Client.Game;
-using FFXIVClientStructs.FFXIV.Client.System.Framework;
+using FFXIVClientStructs.FFXIV.Client.Game;
 using FFXIVClientStructs.FFXIV.Client.System.String;
-using FFXIVClientStructs.FFXIV.Component.GUI;
 
-namespace FFXIVClientStructs.FFXIV.Client.UI.Agent; 
+namespace FFXIVClientStructs.FFXIV.Client.UI.Agent;
 
+// Client::UI::Agent::AgentSalvage
+//   Client::UI::Agent::AgentInterface
+//     Component::GUI::AtkModuleInterface::AtkEventInterface
 [Agent(AgentId.Salvage)]
-[StructLayout(LayoutKind.Explicit, Size = 0x190)]
+[GenerateInterop]
+[Inherits<AgentInterface>]
+[StructLayout(LayoutKind.Explicit, Size = 0x438)]
 public unsafe partial struct AgentSalvage {
-    public static AgentSalvage* Instance() => Framework.Instance()->GetUiModule()->GetAgentModule()->GetAgentSalvage();
-    
-    [FieldOffset(0x00)] public AgentInterface AgentInterface;
 
     [FieldOffset(0x30)] public SalvageItemCategory SelectedCategory;
     [FieldOffset(0x38)] public SalvageListItem* ItemList;
@@ -28,23 +28,15 @@ public unsafe partial struct AgentSalvage {
 
     [FieldOffset(0x398)] public SalvageResult DesynthItem;
     [FieldOffset(0x3A4)] public uint DesynthItemId;
-    
-    [FixedArray(typeof(SalvageResult), 3)]
-    [FieldOffset(0x3A8)] public fixed byte DesynthResult[8 * 3];
 
-    public Span<SalvageResult> DesynthResultSpan {
-        get {
-            fixed (byte* ptr = DesynthResult)
-                return new Span<SalvageResult>(ptr, 3);
-        }
-    }
+    [FieldOffset(0x3A8), FixedSizeArray] internal FixedSizeArray3<SalvageResult> _desynthResults;
 
-    [MemberFunction("E8 ?? ?? ?? ?? 48 8B 7C 24 ?? C7 85")]
-    public partial void* ItemListRefresh();
-    
+    [MemberFunction("E8 ?? ?? ?? ?? 48 8D 55 F0 C7 87 ?? ?? ?? ?? ?? ?? ?? ??")]
+    public partial void ItemListRefresh();
+
     [MemberFunction("E8 ?? ?? ?? ?? 41 81 BD ?? ?? ?? ?? ?? ?? ?? ?? 7D 1A")]
-    public partial void* ItemListAdd(bool meetsLevelRequirement, InventoryType containerId, int containerSlot, uint itemId, void* exdRow, uint quantity);
-    
+    public partial void ItemListAdd(bool meetsLevelRequirement, InventoryType containerId, int containerSlot, uint itemId, void* exdRow, uint quantity);
+
     public enum SalvageItemCategory {
         InventoryEquipment,
         InventoryHousing,

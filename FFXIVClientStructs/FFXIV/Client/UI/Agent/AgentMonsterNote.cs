@@ -1,13 +1,15 @@
-﻿using FFXIVClientStructs.FFXIV.Client.System.String;
-using FFXIVClientStructs.FFXIV.Component.GUI;
+using FFXIVClientStructs.FFXIV.Client.System.String;
 
-namespace FFXIVClientStructs.FFXIV.Client.UI.Agent; 
+namespace FFXIVClientStructs.FFXIV.Client.UI.Agent;
 
+// Client::UI::Agent::AgentMonsterNote
+//   Client::UI::Agent::AgentInterface
+//     Component::GUI::AtkModuleInterface::AtkEventInterface
 [Agent(AgentId.MonsterNote)]
+[GenerateInterop]
+[Inherits<AgentInterface>]
 [StructLayout(LayoutKind.Explicit, Size = 0x68)]
-public struct AgentMonsterNote
-{
-    [FieldOffset(0x00)] public AgentInterface AgentInterface;
+public unsafe partial struct AgentMonsterNote {
     [FieldOffset(0x28)] public StdVector<Utf8String> StringVector;
     [FieldOffset(0x40)] public uint BaseId;
     [FieldOffset(0x44)] public byte ClassId;
@@ -18,8 +20,7 @@ public struct AgentMonsterNote
 
     [FieldOffset(0x5C)] public byte IsLocked;
 
-    public uint GetMonsterNoteIdForIndex(int index)
-    {
+    public uint GetMonsterNoteIdForIndex(int index) {
         return (uint)(ClassId * BaseId + Rank * 10 + index + 1);
     }
 }

@@ -1,22 +1,20 @@
-﻿using FFXIVClientStructs.FFXIV.Client.UI;
+using AtkEventInterface = FFXIVClientStructs.FFXIV.Component.GUI.AtkModuleInterface.AtkEventInterface;
 
-namespace FFXIVClientStructs.FFXIV.Component.GUI;
+namespace FFXIVClientStructs.FFXIV.Client.UI.Agent;
+
 // Client::UI::Agent::AgentInterface
 //   Component::GUI::AtkModuleInterface::AtkEventInterface
-
-// size = 0x8
-// ctor E8 ?? ?? ?? ?? F6 C3 01 74 0D BA ?? ?? ?? ?? 48 8B CF E8 ?? ?? ?? ?? 48 8B C7 48 8B 5C 24 ?? 48 83 C4 20 5F C3 CC 48 89 5C 24 ?? 48 89 6C 24 ?? 
+// ctor "E8 ?? ?? ?? ?? 80 63 30 80"
+[GenerateInterop(isInherited: true)]
+[Inherits<AtkEventInterface>]
 [StructLayout(LayoutKind.Explicit, Size = 0x28)]
-public unsafe partial struct AgentInterface
-{
-    [FieldOffset(0x0)] public AtkEventInterface AtkEventInterface;
-    [FieldOffset(0x10)] public UIModule* UiModule;
+public unsafe partial struct AgentInterface {
+    [FieldOffset(0x10)] public UIModuleInterface* UIModuleInterface;
     [FieldOffset(0x20)] public uint AddonId;
 
+    [VirtualFunction(2)]
+    public partial void Dtor(bool free);
 
-    [VirtualFunction(0)]
-    public partial void* ReceiveEvent(void* eventData, AtkValue* values, uint valueCount, ulong eventKind);
-    
     [VirtualFunction(3)]
     public partial void Show();
 
@@ -26,6 +24,43 @@ public unsafe partial struct AgentInterface
     [VirtualFunction(5)]
     public partial bool IsAgentActive();
 
+    [VirtualFunction(6)]
+    public partial void Update(uint frameCount);
+
+    /// <summary>
+    /// Checks if the Agent can be activated.<br/>
+    /// This may be based on conditions, unlock state, completed quests or simply if the corresponding main command is enabled.
+    /// </summary>
+    [VirtualFunction(7)]
+    public partial bool IsActivatable();
+
     [VirtualFunction(8)]
-    public partial uint GetAddonID();
+    public partial uint GetAddonId();
+
+    [VirtualFunction(9)]
+    public partial void OnGameEvent(GameEvent gameEvent);
+
+    [VirtualFunction(10)]
+    public partial void OnLevelChange(byte classJobId, ushort level);
+
+    [VirtualFunction(11)]
+    public partial void OnClassJobChange(byte classJobId);
+
+    [MemberFunction("E8 ?? ?? ?? ?? 44 85 FF")]
+    public partial AgentInterface* GetAgentByInternalId(AgentId agentId);
+
+    [MemberFunction("E8 ?? ?? ?? ?? 8D 7E 4B")]
+    public partial bool IsAddonReady();
+
+    public enum GameEvent {
+        LoggedIn,
+        LoadingEnded, // UI shown
+        LoadingStarted, // UI hidden
+        LoggedOut,
+        Unk4,
+        Unk5, // Entering Duty?
+        Unk6, // Entering Duty?
+        Unk7, // Leaving Duty?
+        Unk8
+    }
 }

@@ -1,4 +1,4 @@
-﻿using FFXIVClientStructs.FFXIV.Component.GUI;
+using FFXIVClientStructs.FFXIV.Component.GUI;
 
 namespace FFXIVClientStructs.FFXIV.Client.UI;
 // AddonNamePlate::OnUpdate notes
@@ -16,30 +16,28 @@ namespace FFXIVClientStructs.FFXIV.Client.UI;
 //   Component::GUI::AtkUnitBase
 //     Component::GUI::AtkEventListener
 [Addon("NamePlate")]
-[StructLayout(LayoutKind.Explicit, Size = 0x470)]
-public unsafe struct AddonNamePlate
-{
-    [FieldOffset(0x0)] public AtkUnitBase AtkUnitBase;
-    [FieldOffset(0x220)] public BakePlateRenderer BakePlate;
-    [FieldOffset(0x460)] public NamePlateObject* NamePlateObjectArray; // 0 - 50
-    [FieldOffset(0x468)] public byte DoFullUpdate;
-    [FieldOffset(0x46A)] public ushort AlternatePartId;
+[GenerateInterop]
+[Inherits<AtkUnitBase>]
+[StructLayout(LayoutKind.Explicit, Size = 0x480)]
+public unsafe partial struct AddonNamePlate {
+    [FieldOffset(0x230)] public BakePlateRenderer BakePlate;
+    [FieldOffset(0x470)] public NamePlateObject* NamePlateObjectArray; // 0 - 50
+    [FieldOffset(0x478)] public byte DoFullUpdate;
+    [FieldOffset(0x47A)] public ushort AlternatePartId;
 
     // Client::UI::AddonNamePlate::BakePlateRenderer
     //   Component::GUI::AtkTextNodeRenderer
     //     Component::GUI::AtkResourceRendererBase
     // might be 238 not 240 but not super relevant here
     [StructLayout(LayoutKind.Explicit, Size = 0x240)]
-    public struct BakePlateRenderer
-    {
+    public struct BakePlateRenderer {
         [FieldOffset(0x230)] public byte DisableFixedFontResolution; // added in 5.5
     }
 
     // this is the pre-rendered texture data for a nameplate
     // nameplates are 'baked' into a single texture using the BakePlateRenderer
     [StructLayout(LayoutKind.Explicit, Size = 0xC)]
-    public struct BakeData
-    {
+    public struct BakeData {
         [FieldOffset(0x0)] public short U;
         [FieldOffset(0x2)] public short V;
         [FieldOffset(0x4)] public short Width;
@@ -51,8 +49,7 @@ public unsafe struct AddonNamePlate
     public static int NumNamePlateObjects => 50;
 
     [StructLayout(LayoutKind.Explicit, Size = 0x78)]
-    public struct NamePlateObject
-    {
+    public struct NamePlateObject {
         [FieldOffset(0x00)] public BakeData BakeData;
         [FieldOffset(0x10)] public AtkComponentNode* RootNode;
         [FieldOffset(0x18)] public AtkResNode* ResNode;

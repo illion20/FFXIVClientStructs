@@ -1,10 +1,14 @@
-﻿using FFXIVClientStructs.FFXIV.Component.GUI;
+using FFXIVClientStructs.FFXIV.Component.GUI;
 
-namespace FFXIVClientStructs.FFXIV.Client.UI; 
+namespace FFXIVClientStructs.FFXIV.Client.UI;
 
+// Client::UI::AddonCharacterInspect
+//   Component::GUI::AtkUnitBase
+//     Component::GUI::AtkEventListener
 [Addon("CharacterInspect")]
-[StructLayout(LayoutKind.Explicit, Size = 0x500)]
-public unsafe struct AddonCharacterInspect {
-    [FieldOffset(0x000)] public AtkUnitBase AtkUnitBase;
-    [FieldOffset(0x430)] public AtkComponentBase* PreviewComponent;
+[GenerateInterop]
+[Inherits<AtkUnitBase>]
+[StructLayout(LayoutKind.Explicit, Size = 0x510)]
+public unsafe partial struct AddonCharacterInspect {
+    [FieldOffset(0x440)] public AtkComponentBase* PreviewComponent;
 }

@@ -1,9 +1,8 @@
-﻿namespace FFXIVClientStructs.FFXIV.Client.Game.UI;
+namespace FFXIVClientStructs.FFXIV.Client.Game.UI;
 
+// Client::Game::UI::WeaponState
 [StructLayout(LayoutKind.Explicit, Size = 0x18)]
-public struct WeaponState
-{
-    [FieldOffset(0x00), Obsolete("Use IsUnsheathed instead.", true)] public byte WeaponUnsheathed;
+public struct WeaponState {
     [FieldOffset(0x00)] public bool IsUnsheathed;
     [FieldOffset(0x04)] public float SheatheCooldown;
     [FieldOffset(0x08)] public float AutoSheathTimer;

@@ -1,22 +1,22 @@
-﻿using FFXIVClientStructs.FFXIV.Component.GUI;
+using FFXIVClientStructs.FFXIV.Component.GUI;
 
 namespace FFXIVClientStructs.FFXIV.Client.UI;
 
+// Client::UI::AddonReconstructionBox
+//   Component::GUI::AtkUnitBase
+//     Component::GUI::AtkEventListener
 [Addon("ReconstructionBox")]
-[StructLayout(LayoutKind.Explicit, Size = 0x440)]
-public unsafe partial struct AddonReconstructionBox
-{
-    [FieldOffset(0x00)] public AtkUnitBase AtkUnitBase;
+[GenerateInterop]
+[Inherits<AtkUnitBase>]
+[StructLayout(LayoutKind.Explicit, Size = 0x450)]
+public unsafe partial struct AddonReconstructionBox {
+    [FieldOffset(0x268), FixedSizeArray] internal FixedSizeArray10<AddonItemDonationInfo> _donationInfos;
 
-    [FixedSizeArray<AddonItemDonationInfo>(10)] 
-    [FieldOffset(0x258)] public fixed byte DonationInfoArray[0x30 * 10];
-    
-    [FieldOffset(0x438)] public int ItemHovered; // 1 if hovering an item, 0 otherwise
+    [FieldOffset(0x448)] public int ItemHovered; // 1 if hovering an item, 0 otherwise
 }
 
 [StructLayout(LayoutKind.Explicit, Size = 0x30)]
-public unsafe struct AddonItemDonationInfo
-{
+public unsafe struct AddonItemDonationInfo {
     [FieldOffset(0x00)] public void* UnkPtr1;
     [FieldOffset(0x08)] public void* UnkPtr2;
     [FieldOffset(0x10)] public void* UnkPtr3;

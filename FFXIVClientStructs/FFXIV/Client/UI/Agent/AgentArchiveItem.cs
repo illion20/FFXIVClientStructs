@@ -1,19 +1,19 @@
-using FFXIVClientStructs.FFXIV.Client.System.Framework;
 using FFXIVClientStructs.FFXIV.Client.System.String;
-using FFXIVClientStructs.FFXIV.Component.GUI;
 
-namespace FFXIVClientStructs.FFXIV.Client.UI.Agent; 
+namespace FFXIVClientStructs.FFXIV.Client.UI.Agent;
 
+// Client::UI::Agent::AgentArchiveItem
+//   Client::UI::Agent::AgentInterface
+//     Component::GUI::AtkModuleInterface::AtkEventInterface
 [Agent(AgentId.ArchiveItem)]
+[GenerateInterop]
+[Inherits<AgentInterface>]
 [StructLayout(LayoutKind.Explicit, Size = 0x30)]
 public unsafe partial struct AgentArchiveItem {
-    public static AgentArchiveItem* Instance() => (AgentArchiveItem*) Framework.Instance()->GetUiModule()->GetAgentModule()->GetAgentByInternalId(AgentId.ArchiveItem);
-    
-    [FieldOffset(0x00)] public AgentInterface AgentInterface;
     [FieldOffset(0x28)] public ArchiveItem* ArchiveItem;
-    
-    [MemberFunction("E8 ?? ?? ?? ?? 48 8B 9C 24 ?? ?? ?? ?? C7 06")]
-    public partial void* ViewArchiveItem(uint itemId);
+
+    [MemberFunction("E8 ?? ?? ?? ?? 48 8B 9C 24 ?? ?? ?? ?? C7 06 ?? ?? ?? ?? 48 8B C6 C6 46 08 01 48 8B 4C 24 ??")]
+    public partial void ViewArchiveItem(uint itemId);
 }
 
 [StructLayout(LayoutKind.Explicit, Size = 0xB0)]

@@ -1,8 +1,9 @@
-﻿namespace FFXIVClientStructs.Havok;
+using FFXIVClientStructs.Havok.Common.Base.Container.String;
 
-[StructLayout(LayoutKind.Sequential, Pack = 8)]
-public struct hkaBone
-{
-	public hkStringPtr Name;
-	public byte LockTranslation;
+namespace FFXIVClientStructs.Havok.Animation.Rig;
+
+[StructLayout(LayoutKind.Explicit, Size = 0x10)]
+public struct hkaBone {
+    [FieldOffset(0x00)] public hkStringPtr Name;
+    [FieldOffset(0x08)] public byte LockTranslation;
 }

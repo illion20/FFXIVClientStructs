@@ -1,9 +1,10 @@
-﻿namespace FFXIVClientStructs.FFXIV.Client.Game;
+namespace FFXIVClientStructs.FFXIV.Client.Game;
 
+// Client::Game::RaceChocoboManager
+[GenerateInterop]
 [StructLayout(LayoutKind.Explicit, Size = 0x26)]
-public unsafe partial struct RaceChocoboManager
-{
-    [StaticAddress("48 8d 0d ?? ?? ?? ?? 0f b7 d8 e8 ?? ?? ?? ?? 0f b7", 3)]
+public unsafe partial struct RaceChocoboManager {
+    [StaticAddress("48 8D 0D ?? ?? ?? ?? E8 ?? ?? ?? ?? 83 F8 02 75 08", 3)]
     public static partial RaceChocoboManager* Instance();
 
     //[FieldOffset(0x00)] public int Unknownx00;

@@ -1,19 +1,19 @@
-﻿namespace FFXIVClientStructs.FFXIV.Client.Game.UI;
+namespace FFXIVClientStructs.FFXIV.Client.Game.UI;
 
-/// <summary>
-/// A struct representing the UIState Achievement
-/// </summary>
-[StructLayout(LayoutKind.Explicit, Size = 0x550)]
-public unsafe partial struct Achievement
-{
-    [FieldOffset(0x00)] public void** VTable;
+// Client::Game::UI::Achievement
+[GenerateInterop]
+[StructLayout(LayoutKind.Explicit, Size = 0x598)]
+public unsafe partial struct Achievement {
+    [StaticAddress("48 8D 0D ?? ?? ?? ?? E8 ?? ?? ?? ?? 04 30 FF C3", 3)]
+    public static partial Achievement* Instance();
+
     [FieldOffset(0x08)] public AchievementState State;
-    [FieldOffset(0x0C)] public fixed byte CompletedAchievements[428];
+    [FieldOffset(0x0C), FixedSizeArray] internal FixedSizeArray452<byte> _completedAchievements;
 
-    [FieldOffset(0x1DC)] public AchievementState ProgressRequestState;
-    [FieldOffset(0x1E0)] public uint ProgressAchievementId;
-    [FieldOffset(0x1E4)] public uint ProgressCurrent;
-    [FieldOffset(0x1E8)] public uint ProgressMax;
+    [FieldOffset(0x1F4)] public AchievementState ProgressRequestState;
+    [FieldOffset(0x1F8)] public uint ProgressAchievementId;
+    [FieldOffset(0x1FC)] public uint ProgressCurrent;
+    [FieldOffset(0x200)] public uint ProgressMax;
 
     /// <summary> Requests Achievement Progress from the server. </summary>
     [MemberFunction("48 83 EC ?? C7 81 ?? ?? ?? ?? ?? ?? ?? ?? 45 33 C9")]
@@ -26,7 +26,7 @@ public unsafe partial struct Achievement
     /// <summary> Check if an achievement is complete. </summary>
     /// <param name="achievementId">Achievement ID to check against. This is the ID from the Achievement table. </param>
     /// <returns> Returns true if the achievement is complete. </returns>
-    [MemberFunction("E8 ?? ?? ?? ?? 04 30")]
+    [MemberFunction("E8 ?? ?? ?? ?? 04 30 FF C3")]
     public partial bool IsComplete(int achievementId);
 
     /// <summary> Check if the achievement data has been "loaded" from the server. </summary>
@@ -40,13 +40,9 @@ public unsafe partial struct Achievement
         => State is AchievementState.Loaded;
 
     /// <summary> Represents the loaded state of Achievement </summary>
-    public enum AchievementState : int
-    {
-        Invalid   = 0, // Achievement is initialized at this state
+    public enum AchievementState : int {
+        Invalid = 0, // Achievement is initialized at this state
         Requested = 1, // This state is set between the client request and receiving the data from the server
-        Loaded    = 2, // Set upon data being received
+        Loaded = 2, // Set upon data being received
     }
-
-    [StaticAddress("48 8D 0D ?? ?? ?? ?? E8 ?? ?? ?? ?? 04 30", 3)]
-    public static partial Achievement* Instance();
 }

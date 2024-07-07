@@ -1,23 +1,24 @@
-﻿using FFXIVClientStructs.FFXIV.Component.GUI;
+using FFXIVClientStructs.FFXIV.Component.GUI;
 
 namespace FFXIVClientStructs.FFXIV.Client.UI;
 
+// Client::UI::AddonSatisfactionSupply
+//   Component::GUI::AtkUnitBase
+//     Component::GUI::AtkEventListener
 [Addon("SatisfactionSupply")]
-[StructLayout(LayoutKind.Explicit, Size = 0x670)]
-public unsafe partial struct AddonSatisfactionSupply
-{
-    [FieldOffset(0x00)] public AtkUnitBase AtkUnitBase;
-    [FieldOffset(0x224)] public int HoveredElementIndex; // Index 0-2 of the last hovered turn in element
+[GenerateInterop]
+[Inherits<AtkUnitBase>]
+[StructLayout(LayoutKind.Explicit, Size = 0x680)]
+public unsafe partial struct AddonSatisfactionSupply {
+    [FieldOffset(0x234)] public int HoveredElementIndex; // Index 0-2 of the last hovered turn in element
 
-    [FixedSizeArray<AddonDeliveryItemInfo>(3)]
-    [FieldOffset(0x308)] public fixed byte DeliveryInfo[0x68 * 3];
+    [FieldOffset(0x318), FixedSizeArray] internal FixedSizeArray3<AddonDeliveryItemInfo> _deliveryInfo;
 }
 
 [StructLayout(LayoutKind.Explicit, Size = 0x68)]
-public unsafe partial struct AddonDeliveryItemInfo
-{
+public struct AddonDeliveryItemInfo {
     [FieldOffset(0x00)] public uint ItemId;
-    
+
     // The rest of this array are pointers to various other blocks of memory it seems.
     // These pointers don't seem to be vfuncs
 }

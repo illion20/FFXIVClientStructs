@@ -1,6 +1,4 @@
-﻿namespace FFXIVClientStructs.Havok;
+namespace FFXIVClientStructs.Havok.Animation.Playback.Control;
 
-public unsafe struct hkaAnimationControlListener
-{
-	public void* vtbl;
-}
+[StructLayout(LayoutKind.Explicit, Size = 0x08)]
+public struct hkaAnimationControlListener;

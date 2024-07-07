@@ -1,8 +1,8 @@
-﻿namespace FFXIVClientStructs.FFXIV.Client.Graphics;
+namespace FFXIVClientStructs.FFXIV.Client.Graphics;
 
+// Client::Graphics::ReferencedClassBase
+[GenerateInterop(isInherited: true)]
 [StructLayout(LayoutKind.Explicit, Size = 0x10)]
-public unsafe struct ReferencedClassBase
-{
-    [FieldOffset(0x0)] public void* vtbl;
+public unsafe partial struct ReferencedClassBase {
     [FieldOffset(0x8)] public uint RefCount;
 }

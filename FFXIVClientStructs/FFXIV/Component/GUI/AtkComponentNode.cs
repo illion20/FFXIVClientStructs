@@ -1,16 +1,21 @@
-﻿namespace FFXIVClientStructs.FFXIV.Component.GUI;
+namespace FFXIVClientStructs.FFXIV.Component.GUI;
+
 // Component::GUI::AtkComponentNode
 //   Component::GUI::AtkResNode
 //     Component::GUI::AtkEventTarget
-
-// holds an AtkComponentBase derived class
-
-// size = 0xB8
-// common CreateAtkNode function E8 ?? ?? ?? ?? 48 8B 4E 08 49 8B D5 
+// common CreateAtkNode function "E8 ?? ?? ?? ?? 49 8B 55 08 48 89 04 13"
 // type 10xx where xx is the component type
-[StructLayout(LayoutKind.Explicit, Size = 0xB0)]
-public unsafe struct AtkComponentNode
-{
-    [FieldOffset(0x0)] public AtkResNode AtkResNode;
-    [FieldOffset(0xA8)] public AtkComponentBase* Component;
+// holds an AtkComponentBase derived class
+[GenerateInterop]
+[Inherits<AtkResNode>]
+[StructLayout(LayoutKind.Explicit, Size = 0xB8)]
+[VirtualTable("E8 ?? ?? ?? ?? 49 8B 55 08 48 89 04 13", [1, 457])]
+public unsafe partial struct AtkComponentNode {
+    [FieldOffset(0xB0)] public AtkComponentBase* Component;
+
+    // 7.0 inlines this ctor
+    public void Ctor() {
+        AtkResNode.Ctor();
+        VirtualTable = StaticVirtualTablePointer;
+    }
 }

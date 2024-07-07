@@ -1,12 +1,15 @@
-﻿using FFXIVClientStructs.FFXIV.Client.System.String;
-using FFXIVClientStructs.FFXIV.Component.GUI;
+using FFXIVClientStructs.FFXIV.Client.System.String;
 
-namespace FFXIVClientStructs.FFXIV.Client.UI.Agent; 
+namespace FFXIVClientStructs.FFXIV.Client.UI.Agent;
 
+// Client::UI::Agent::AgentAozContentResult
+//   Client::UI::Agent::AgentInterface
+//     Component::GUI::AtkModuleInterface::AtkEventInterface
 [Agent(AgentId.AozContentResult)]
+[GenerateInterop]
+[Inherits<AgentInterface>]
 [StructLayout(LayoutKind.Explicit, Size = 0x30)]
-public unsafe struct AgentAozContentResult {
-    [FieldOffset(0x00)] public AgentInterface AgentInterface;
+public unsafe partial struct AgentAozContentResult {
     [FieldOffset(0x28)] public AozContentResultData* AozContentResultData;
 }
 

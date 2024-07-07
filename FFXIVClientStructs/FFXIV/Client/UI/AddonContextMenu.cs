@@ -1,12 +1,16 @@
-﻿using FFXIVClientStructs.FFXIV.Component.GUI;
+using FFXIVClientStructs.FFXIV.Component.GUI;
 
 namespace FFXIVClientStructs.FFXIV.Client.UI;
 
+// Client::UI::AddonContextMenu
+//   Component::GUI::AtkUnitBase
+//     Component::GUI::AtkEventListener
 [Addon("ContextMenu")]
-[StructLayout(LayoutKind.Explicit, Size = 0x2A0)]
-public struct AddonContextMenu
-{
-    [FieldOffset(0x0)] public AtkUnitBase AtkUnitBase;
-    [FieldOffset(0x160), Obsolete("use AtkUnitBase.AtkValues")] public unsafe AtkValue* AtkValues;
-    [FieldOffset(0x1CA), Obsolete("use AtkUnitBase.AtkValuesCount")] public ushort AtkValuesCount;
+[GenerateInterop]
+[Inherits<AtkUnitBase>]
+[VirtualTable("48 8D 05 ?? ?? ?? ?? 48 8B CB 48 89 03 E8 ?? ?? ?? ?? 80 8B ?? ?? ?? ?? ?? 33 C9 48 89 83 ?? ?? ?? ?? 48 8D 05 ?? ?? ?? ?? 48 89 83 ?? ?? ?? ?? 48 8B C3", 3)]
+[StructLayout(LayoutKind.Explicit, Size = 0x2B0)]
+public partial struct AddonContextMenu {
+    [VirtualFunction(72)]
+    public partial bool OnMenuSelected(int selectedIdx, byte a3);
 }

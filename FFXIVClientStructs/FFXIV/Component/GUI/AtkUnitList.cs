@@ -1,13 +1,10 @@
-﻿namespace FFXIVClientStructs.FFXIV.Component.GUI;
+namespace FFXIVClientStructs.FFXIV.Component.GUI;
+
 // Component::GUI::AtkUnitList
-
-// size = 0x810
 // ctor inlined
-
+[GenerateInterop]
 [StructLayout(LayoutKind.Explicit, Size = 0x810)]
-public unsafe struct AtkUnitList
-{
-    [FieldOffset(0x0)] public void* vtbl;
-    [FieldOffset(0x8)] public AtkUnitBase* AtkUnitEntries; // array of pointers 0x8-0x808
-    [FieldOffset(0x808)] public uint Count;
+public unsafe partial struct AtkUnitList {
+    [FieldOffset(0x8), FixedSizeArray] internal FixedSizeArray256<Pointer<AtkUnitBase>> _entries;
+    [FieldOffset(0x808)] public ushort Count;
 }

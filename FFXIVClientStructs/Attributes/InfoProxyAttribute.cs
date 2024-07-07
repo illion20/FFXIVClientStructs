@@ -1,14 +1,9 @@
-﻿using FFXIVClientStructs.FFXIV.Client.UI.Info;
+using FFXIVClientStructs.FFXIV.Client.UI.Info;
 
 namespace FFXIVClientStructs.Attributes;
 
 [AttributeUsage(AttributeTargets.Struct)]
-public class InfoProxyAttribute : Attribute
-{
-    public InfoProxyAttribute(InfoProxyId infoProxyID)
-    {
-        ID = infoProxyID;
-    }
+public class InfoProxyAttribute(InfoProxyId infoProxyId) : Attribute {
 
-    public InfoProxyId ID { get; }
+    public InfoProxyId InfoProxyId { get; } = infoProxyId;
 }

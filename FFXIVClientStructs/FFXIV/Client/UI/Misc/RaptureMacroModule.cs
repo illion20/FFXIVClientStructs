@@ -1,4 +1,3 @@
-using FFXIVClientStructs.FFXIV.Client.System.Framework;
 using FFXIVClientStructs.FFXIV.Client.System.String;
 using FFXIVClientStructs.FFXIV.Client.UI.Misc.UserFileManager;
 
@@ -7,76 +6,31 @@ namespace FFXIVClientStructs.FFXIV.Client.UI.Misc;
 // Client::UI::Misc::RaptureMacroModule
 //   Client::UI::Misc::UserFileManager::UserFileEvent
 // ctor "E8 ?? ?? ?? ?? 48 8D B7 ?? ?? ?? ?? 4C 8B C7"
+[GenerateInterop]
+[Inherits<UserFileEvent>]
 [StructLayout(LayoutKind.Explicit, Size = 0x51AA8)]
-public unsafe partial struct RaptureMacroModule
-{
-    public static RaptureMacroModule* Instance => Framework.Instance()->GetUiModule()->GetRaptureMacroModule();
+public unsafe partial struct RaptureMacroModule {
+    public static RaptureMacroModule* Instance() => UIModule.Instance()->GetRaptureMacroModule();
 
-    [StructLayout(LayoutKind.Sequential, Size = 0x688)]
-    public struct Macro
-    {
-        public uint IconId;
-        public uint Unk; // MacroIcon, exclusive of /micon or similar. Oddly, off by one from Lumina's table.
-        public Utf8String Name;
-        public Lines Line;
+    [FieldOffset(0x40)] public RaptureTextModule* RaptureTextModule;
+    //[FieldOffset(0x48)] public TextChecker* TextChecker;
 
-        [StructLayout(LayoutKind.Sequential, Size = 0x618)]
-        public struct Lines
-        {
-            private fixed byte data[0x618];
-
-            public Utf8String* this[int i]
-            {
-                get
-                {
-                    if (i < 0 || i > 14) return null;
-                    fixed (byte* p = data)
-                    {
-                        return (Utf8String*) (p + sizeof(Utf8String) * i);
-                    }
-                }
-            }
-        }
-    }
-
-    [StructLayout(LayoutKind.Sequential, Size = 0x28D20)]
-    public struct MacroPage
-    {
-        private fixed byte data[0x28D20];
-
-        public Macro* this[int i]
-        {
-            get
-            {
-                if (i < 0 || i > 99) return null;
-                Macro* a;
-                fixed (byte* p = data)
-                {
-                    a = (Macro*) (p + 0x688 * i);
-                }
-
-                return a;
-            }
-        }
-    }
-
-    [FieldOffset(0)] public UserFileEvent UserFileEvent;
-    [FieldOffset(0x58)] public MacroPage Individual;
-    [FieldOffset(0x28D78)] public MacroPage Shared;
+    [FieldOffset(0x58), FixedSizeArray] internal FixedSizeArray100<Macro> _individual;
+    [FieldOffset(0x28D78), FixedSizeArray] internal FixedSizeArray100<Macro> _shared;
 
     [MemberFunction("E8 ?? ?? ?? ?? 32 DB 83 C6 F9")]
     public partial Macro* GetMacro(uint set, uint index);
 
-    [MemberFunction("E8 ?? ?? ?? ?? 48 8D 4C 24 ?? E8 ?? ?? ?? ?? 44 8B 83 ?? ?? ?? ??")]
+    [MemberFunction("E8 ?? ?? ?? ?? 48 8D 4C 24 ?? E8 ?? ?? ?? ?? 44 8B 83 ?? ?? ?? ?? B2 01")]
     public partial void ReplaceMacroLines(Macro* macro, Utf8String* lines);
 
-    [MemberFunction("E8 ?? ?? ?? ?? 44 8B 87 ?? ?? ?? ?? B2 01")]
+    [MemberFunction("E8 ?? ?? ?? ?? 44 8B 83 ?? ?? ?? ?? B2 01 49 8B CE")]
     public partial void AppendMacroLines(Macro* macro, Utf8String* lines);
 
-    [MemberFunction("E8 ?? ?? ?? ?? 83 F8 0F B9 ?? ?? ?? ??")]
+    [MemberFunction("E8 ?? ?? ?? ?? 8B F8 85 C0 7E 35")]
     public partial uint GetLineCount(Macro* macro);
 
-    [MemberFunction("E8 ?? ?? ?? ?? 48 8D 4C 24 ?? E8 ?? ?? ?? ?? 48 8D 8C 24 ?? ?? ?? ?? E8 ?? ?? ?? ?? 41 FE C7")]
+    [MemberFunction("E8 ?? ?? ?? ?? 48 8D 8C 24 ?? ?? ?? ?? E8 ?? ?? ?? ?? 48 8D 8C 24 ?? ?? ?? ?? E8 ?? ?? ?? ?? 41 FE C5")]
     public partial void SetMacroLines(Macro* macro, int lineStartIndex, Utf8String* lines);
 
     /// <summary>
@@ -86,4 +40,29 @@ public unsafe partial struct RaptureMacroModule
     /// <param name="set">The macro page ID that needs saving.</param>
     [MemberFunction("45 85 C0 75 04 88 51 3D")]
     public partial void SetSavePendingFlag(bool needsSave, uint set);
+
+    [GenerateInterop]
+    [StructLayout(LayoutKind.Explicit, Size = 0x688)]
+    public partial struct Macro {
+        [FieldOffset(0)] public uint IconId;
+        [FieldOffset(0x4)] public uint MacroIconRowId; // offset by +1
+        [FieldOffset(0x8)] public Utf8String Name;
+        [FieldOffset(0x70), FixedSizeArray] internal FixedSizeArray15<Utf8String> _lines;
+
+        /// <summary>
+        /// Set the Icon of this Macro and also sets the correct MacroIconRowId
+        /// </summary>
+        /// <param name="iconId">The icon ID that this macro should now use </param>
+        [MemberFunction("48 89 5C 24 ?? 48 89 74 24 ?? 57 48 83 EC ?? 8B FA 89 11")]
+        public partial void SetIcon(uint iconId);
+
+        [MemberFunction("E8 ?? ?? ?? ?? 45 84 ED 48 8D 8B ?? ?? ?? ??")]
+        public partial Macro* Copy(Macro* other);
+
+        [MemberFunction("E8 ?? ?? ?? ?? 49 63 97 ?? ?? ?? ?? 83 FA 11")]
+        public partial void Clear();
+
+        [MemberFunction("E8 ?? ?? ?? ?? 48 8B 4D 10 0F B6 9D ?? ?? ?? ??")]
+        public partial bool IsEmpty();
+    }
 }

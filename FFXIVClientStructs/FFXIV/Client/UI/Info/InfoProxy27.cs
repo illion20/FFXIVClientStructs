@@ -1,8 +1,8 @@
-﻿namespace FFXIVClientStructs.FFXIV.Client.UI.Info;
+namespace FFXIVClientStructs.FFXIV.Client.UI.Info;
 
+[GenerateInterop]
+[Inherits<InfoProxyInterface>]
 [StructLayout(LayoutKind.Explicit, Size = 0x28)]
-public unsafe partial struct InfoProxy27
-{
-    [FieldOffset(0x00)] public InfoProxyInterface InfoProxyInterface;
+public unsafe partial struct InfoProxy27 {
 
 }

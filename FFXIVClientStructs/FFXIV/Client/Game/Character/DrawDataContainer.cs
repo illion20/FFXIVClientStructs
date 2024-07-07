@@ -1,58 +1,46 @@
-﻿namespace FFXIVClientStructs.FFXIV.Client.Game.Character;
+using System.Diagnostics.CodeAnalysis;
+using FFXIVClientStructs.FFXIV.Client.Graphics.Scene;
 
-// ctor: E8 ?? ?? ?? ?? 48 8D 8F ?? ?? ?? ?? 48 8D 05 ?? ?? ?? ?? 48 89 59 ?? 48 89 01 E8 
-[StructLayout(LayoutKind.Explicit, Size = 0x190)]
-public unsafe partial struct DrawDataContainer
-{
-    [FieldOffset(0x000)] public void** Vtable;
-    [FieldOffset(0x008)] public Character*  Parent;
+namespace FFXIVClientStructs.FFXIV.Client.Game.Character;
 
-    [FieldOffset(0x010)] public WeaponModelId MainHandModel;
-    [FieldOffset(0x020)] public DrawObjectData MainHand;
-    [FieldOffset(0x06C)] public byte MainHandState;
-    [FieldOffset(0x072)] public ushort MainHandFlags1;
-    [FieldOffset(0x074)] public byte MainHandFlags2;
+// Client::Game::Character::DrawDataContainer
+//   Client::Game::Character::ContainerInterface
+// ctor "E8 ?? ?? ?? ?? 48 8D 8F ?? ?? ?? ?? 48 8D 05 ?? ?? ?? ?? 48 89 59 ?? 48 89 01 E8"
+[GenerateInterop]
+[Inherits<ContainerInterface>]
+[StructLayout(LayoutKind.Explicit, Size = 0x1E0)]
+public unsafe partial struct DrawDataContainer {
+    [FieldOffset(0x010), FixedSizeArray] internal FixedSizeArray3<DrawObjectData> _weaponData;
+    [FieldOffset(0x160), FixedSizeArray] internal FixedSizeArray10<EquipmentModelId> _equipmentModelIds;
+    [FieldOffset(0x1B0)] public CustomizeData CustomizeData;
 
-    [FieldOffset(0x078)] public WeaponModelId OffHandModel;
-    [FieldOffset(0x088)] public DrawObjectData OffHand;
-    [FieldOffset(0x0D4)] public byte OffHandState;
-    [FieldOffset(0x0DA)] public ushort OffHandFlags1;
-    [FieldOffset(0x0DC)] public byte OffHandFlags2;
+    [FieldOffset(0x1CE)] public byte Flags1;
+    [FieldOffset(0x1CF)] public byte Flags2;
 
-    [FieldOffset(0x0E0)] public WeaponModelId  UnkE0Model;
-    [FieldOffset(0x0F0)] public DrawObjectData UnkF0;
-    [FieldOffset(0x142)] public ushort Unk144Flags1;
-    [FieldOffset(0x144)] public byte Unk144Flags2;
+    [UnscopedRef]
+    public ref DrawObjectData Weapon(WeaponSlot slot) {
+        return ref WeaponData[(int)slot];
+    }
 
-    [FieldOffset(0x148)] public EquipmentModelId Head;
-    [FieldOffset(0x14C)] public EquipmentModelId Top;
-    [FieldOffset(0x150)] public EquipmentModelId Arms;
-    [FieldOffset(0x154)] public EquipmentModelId Legs;
-    [FieldOffset(0x158)] public EquipmentModelId Feet;
-    [FieldOffset(0x15C)] public EquipmentModelId Ear;
-    [FieldOffset(0x160)] public EquipmentModelId Neck;
-    [FieldOffset(0x164)] public EquipmentModelId Wrist;
-    [FieldOffset(0x168)] public EquipmentModelId RFinger;
-    [FieldOffset(0x16C)] public EquipmentModelId LFinger;
+    [UnscopedRef]
+    public ref EquipmentModelId Equipment(EquipmentSlot slot) {
+        return ref EquipmentModelIds[(int)slot];
+    }
 
-    [FieldOffset(0x170)] public CustomizeData CustomizeData;
+    [FieldOffset(0x1D0), FixedSizeArray] internal FixedSizeArray2<ushort> _glassesIds;
 
-    [FieldOffset(0x18A)] public uint Unk18A;
-    [FieldOffset(0x18E)] public byte Flags1;
-    [FieldOffset(0x18F)] public byte Flags2;
-
-    [MemberFunction("E8 ?? ?? ?? ?? 41 B5 ?? FF C6")]
-    public partial void LoadEquipment(EquipmentSlot slot, EquipmentModelId modelId, bool force);
+    [MemberFunction("E8 ?? ?? ?? ?? B1 01 41 FF C6")]
+    public partial void LoadEquipment(EquipmentSlot slot, EquipmentModelId* modelId, bool force);
 
 
-    [MemberFunction("E8 ?? ?? ?? ?? 33 DB BE")]
+    [MemberFunction("E8 ?? ?? ?? ?? 4C 8B 45 7F")]
     public partial void LoadWeapon(WeaponSlot slot, WeaponModelId weaponData, byte redrawOnEquality, byte unk2, byte skipGameObject, byte unk4);
 
     /// <summary>
     /// Called when Hide/Display Weapons when sheathed is toggled or /displayarms is used.
     /// </summary>
     /// <param name="hide">When false, weapons will be turned visible, when true, they will be hidden.</param>
-    [MemberFunction("E8 ?? ?? ?? ?? 4C 8B 6C 24 ?? 0F BA E5")]
+    [MemberFunction("E8 ?? ?? ?? ?? 8B 46 54 0F BA E0 08")]
     public partial void HideWeapons(bool hide);
 
     /// <summary>
@@ -60,7 +48,7 @@ public unsafe partial struct DrawDataContainer
     /// </summary>
     /// <param name="unk">Almost always 0, but sometimes not?</param>
     /// <param name="hide">When false, the headgear will be turned visible, when true it will be hidden.</param>
-    [MemberFunction("E8 ?? ?? ?? ?? 49 8B 04 ?? 80 A3")]
+    [MemberFunction("E8 ?? ?? ?? ?? 0F B6 55 C9")]
     public partial void HideHeadgear(uint unk, bool hide);
 
     /// <summary>
@@ -70,8 +58,7 @@ public unsafe partial struct DrawDataContainer
     [MemberFunction("E8 ?? ?? ?? ?? 0F B6 97 ?? ?? ?? ?? 48 8B CF C0 EA")]
     public partial void SetVisor(bool state);
 
-    public enum EquipmentSlot : uint
-    {
+    public enum EquipmentSlot : uint {
         Head = 0,
         Body = 1,
         Hands = 2,
@@ -79,98 +66,125 @@ public unsafe partial struct DrawDataContainer
         Feet = 4,
         Ears = 5,
         Neck = 6,
-        Wrists  = 7,
+        Wrists = 7,
         RFinger = 8,
         LFinger = 9,
     }
 
-    public enum WeaponSlot : uint
-    {
+    public enum WeaponSlot : uint {
         MainHand = 0,
         OffHand = 1,
         Unk = 2,
     }
 
-    public bool IsHatHidden
-    {
+    public bool IsHatHidden {
         get => (Flags1 & 0x01) == 0x01;
-        set => Flags1 = (byte) (value ? Flags1 | 0x01 : Flags1 & ~0x01);
+        set => Flags1 = (byte)(value ? Flags1 | 0x01 : Flags1 & ~0x01);
     }
 
-    public bool IsWeaponHidden
-    {
+    public bool IsWeaponHidden {
         get => (Flags2 & 0x01) == 0x01;
         set => Flags2 = (byte)(value ? Flags2 | 0x01 : Flags2 & ~0x01);
     }
 
-    public bool IsVisorToggled
-    {
-        get => (Flags2 & 0x08) == 0x08;
-        set => Flags2 = (byte)(value ? Flags2 | 0x08 : Flags2 & ~0x08);
-    }
-
-    private const byte WeaponHiddenFlag = 0x02;
-
-    public bool IsMainHandHidden
-    {
-        get => (MainHandState & WeaponHiddenFlag) == WeaponHiddenFlag;
-        set => MainHandState = (byte)(value ? MainHandState | WeaponHiddenFlag : MainHandState & ~WeaponHiddenFlag);
-    }
-
-    public bool IsOffHandHidden
-    {
-        get => (OffHandState & WeaponHiddenFlag) == WeaponHiddenFlag;
-        set => OffHandState = (byte)(value ? OffHandState | WeaponHiddenFlag : OffHandState & ~WeaponHiddenFlag);
+    public bool IsVisorToggled {
+        get => (Flags2 & 0x10) == 0x10;
+        set => Flags2 = (byte)(value ? Flags2 | 0x10 : Flags2 & ~0x10);
     }
 }
 
+// ctor: "E8 ?? ?? ?? ?? 48 8B E8 EB ?? 33 ED 48 89 AB"
+[StructLayout(LayoutKind.Explicit, Size = 0x70)]
+public unsafe partial struct DrawObjectData {
+    public const int Size = 0x70;
 
+    [FieldOffset(0x00)] public WeaponModelId ModelId;
+    [FieldOffset(0x18)] public DrawObject* DrawObject;
+    [FieldOffset(0x60)] public byte State;
+    [FieldOffset(0x62)] public ushort Flags1;
+    [FieldOffset(0x64)] public byte Flags2;
 
-// ctor: E8 ?? ?? ?? ?? 48 8B E8 EB ?? 33 ED 48 89 AB
-[StructLayout(LayoutKind.Explicit, Size = 0x44)]
-public unsafe partial struct DrawObjectData
-{
-
+    public bool IsHidden {
+        get => (State & 0x02) == 0x02;
+        set => State = (byte)(value ? State | 0x02 : State & ~0x02);
+    }
 }
 
-[StructLayout(LayoutKind.Explicit, Size = Count)]
-public unsafe partial struct CustomizeData
-{
-    private const int Count = 0x1A;
+[GenerateInterop]
+[StructLayout(LayoutKind.Explicit, Size = 0x1A)]
+public unsafe partial struct CustomizeData {
+    [FieldOffset(0x00), CExportIgnore, FixedSizeArray] internal FixedSizeArray26<byte> _data;
 
-    [FieldOffset(0x00)] public fixed byte Data[Count];
     [FieldOffset(0x00)] public byte Race;
     [FieldOffset(0x01)] public byte Sex;
     [FieldOffset(0x02)] public byte BodyType;
-    [FieldOffset(0x04)] public byte Clan;
+    [FieldOffset(0x03)] public byte Height;
+    [FieldOffset(0x04)] public byte Tribe;
+    [FieldOffset(0x05)] public byte Face;
+    [FieldOffset(0x06)] public byte Hairstyle;
+    // 0x07: Highlights
+    [FieldOffset(0x08)] public byte SkinColor;
+    [FieldOffset(0x09)] public byte EyeColorRight;
+    [FieldOffset(0x0A)] public byte HairColor;
+    [FieldOffset(0x0B)] public byte HighlightsColor;
+    // 0x0C: FacialFeature1-7, LegacyTattoo
+    [FieldOffset(0x0D)] public byte TattooColor;
+    [FieldOffset(0x0E)] public byte Eyebrows;
+    [FieldOffset(0x0F)] public byte EyeColorLeft;
+    // 0x10: EyeShape, SmallIris
+    [FieldOffset(0x11)] public byte Nose;
+    [FieldOffset(0x12)] public byte Jaw;
+    // 0x13: Mouth, Lipstick
     [FieldOffset(0x14)] public byte LipColorFurPattern;
+    [FieldOffset(0x15)] public byte MuscleMass;
+    [FieldOffset(0x16)] public byte TailShape;
+    [FieldOffset(0x17)] public byte BustSize;
+    // 0x18: FacePaint, FacePaintReversed
+    [FieldOffset(0x19)] public byte FacePaintColor;
 
-    public byte this[int idx]
-        => Data[idx];
+    public bool Highlights => (byte)(Data[0x07] & 0b_1000_0000) != 0;
 
-    [MemberFunction("E8 ?? ?? ?? ?? 33 DB 48 8D 75")]
+    public bool FacialFeature1 => (byte)(Data[0x0C] & 0b_0000_0001) != 0;
+    public bool FacialFeature2 => (byte)(Data[0x0C] & 0b_0000_0010) != 0;
+    public bool FacialFeature3 => (byte)(Data[0x0C] & 0b_0000_0100) != 0;
+    public bool FacialFeature4 => (byte)(Data[0x0C] & 0b_0000_1000) != 0;
+    public bool FacialFeature5 => (byte)(Data[0x0C] & 0b_0001_0000) != 0;
+    public bool FacialFeature6 => (byte)(Data[0x0C] & 0b_0010_0000) != 0;
+    public bool FacialFeature7 => (byte)(Data[0x0C] & 0b_0100_0000) != 0;
+    public bool LegacyTattoo => (byte)(Data[0x0C] & 0b_1000_0000) != 0;
+
+    public byte EyeShape => (byte)(Data[0x10] & 0b_0111_1111);
+    public bool SmallIris => (byte)(Data[0x10] & 0b_1000_0000) != 0;
+
+    public byte Mouth => (byte)(Data[0x13] & 0b_0111_1111);
+    public bool Lipstick => (byte)(Data[0x13] & 0b_1000_0000) != 0;
+
+    public byte FacePaint => (byte)(Data[0x18] & 0b_0111_1111);
+    public bool FacePaintReversed => (byte)(Data[0x18] & 0b_1000_0000) != 0;
+
+    public byte this[int idx] => Data[idx];
+
+    [MemberFunction("40 53 48 83 EC ?? 48 8B D9 48 8D 42")]
     public partial bool NormalizeCustomizeData(CustomizeData* source);
 }
 
-
-
 [StructLayout(LayoutKind.Explicit, Size = 8)]
-public struct WeaponModelId
-{
+public struct WeaponModelId {
     [FieldOffset(0)] public ushort Id;
     [FieldOffset(2)] public ushort Type;
     [FieldOffset(4)] public ushort Variant;
-    [FieldOffset(6)] public byte Stain;
+    [FieldOffset(6)] public byte Stain1;
+    [FieldOffset(7)] public byte Stain2;
 
-    [FieldOffset(0)] public ulong Value;
+    [FieldOffset(0), CExportIgnore] public ulong Value;
 }
 
-[StructLayout(LayoutKind.Explicit, Size=4)]
-public struct EquipmentModelId
-{
+[StructLayout(LayoutKind.Explicit, Size = 8)]
+public struct EquipmentModelId {
     [FieldOffset(0)] public ushort Id;
     [FieldOffset(2)] public byte Variant;
-    [FieldOffset(3)] public byte Stain;
+    [FieldOffset(3)] public byte Stain1;
+    [FieldOffset(4)] public byte Stain2;
 
-    [FieldOffset(0)] public uint Value;
+    [FieldOffset(0), CExportIgnore] public ulong Value;
 }

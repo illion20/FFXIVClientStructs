@@ -3,12 +3,12 @@ using FFXIVClientStructs.FFXIV.Client.System.String;
 
 namespace FFXIVClientStructs.FFXIV.Client.Game.Fate;
 
-// This is a struct of some sort, likely part of the FateDirector.
-// Size taken from dtor, no vtbl
+// Client::Game::Fate::FateManager
+// ctor "48 89 5C 24 ?? 57 48 83 EC 20 33 FF 48 8B D9 48 89 39 48 89 79 08 48 89 79 10 48 83 C1 18 E8 ?? ?? ?? ?? 48 89 BB"
+[GenerateInterop]
 [StructLayout(LayoutKind.Explicit, Size = 0xB8)]
-public unsafe partial struct FateManager
-{
-    [FieldOffset(0x00)] public StdVector<GameObjectID> Unk_Vector;
+public unsafe partial struct FateManager {
+    [FieldOffset(0x00)] public StdVector<GameObjectId> Unk_Vector;
     [FieldOffset(0x18)] public Utf8String Unk_String;
     [FieldOffset(0x80)] public FateDirector* FateDirector;
     [FieldOffset(0x88)] public FateContext* CurrentFate;
@@ -19,6 +19,6 @@ public unsafe partial struct FateManager
     [StaticAddress("48 89 01 48 8B 3D ?? ?? ?? ?? 48 8B 87", 6, isPointer: true)]
     public static partial FateManager* Instance();
 
-    [MemberFunction("E8 ?? ?? ?? ?? 48 8D 4C 24 ?? 48 85 C0 75")]
+    [MemberFunction("E8 ?? ?? ?? ?? 48 85 C0 74 2D 80 78 1A 00")]
     public partial FateContext* GetFateById(ushort fateId);
 }
